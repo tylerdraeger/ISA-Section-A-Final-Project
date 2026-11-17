@@ -6,7 +6,7 @@ ISA 401 Final Project, Fall 2026, Team [number], Section A
 
 | Item | Link |
 |---|---|
-| Dashboard (Tableau Public) | [link] |
+| Dashboard (Tableau Public) | https://public.tableau.com/app/profile/tyler.draeger/viz/retail_reit_story/RetailREITStory?publish=yes |
 | Recorded technical presentation (YouTube, unlisted) | [link] |
 | This repository | https://github.com/tylerdraeger/ISA-Section-A-Final-Project |
 
@@ -81,6 +81,6 @@ The Tableau storyboard is in `tableau/retail_reit_story.twbx` (8 story points: t
 
 - File: `data/processed/retail_reit_quarterly.csv`
 - One row is: one retail REIT in one quarter (2023 Q1 to the last finished quarter)
-- Rows and columns: 354 rows (24 REITs x up to 15 quarters, 2023 Q1 to 2026 Q3), 47 columns
+- Rows and columns: 354 rows (24 REITs x up to 15 quarters, 2023 Q1 to 2026 Q3), 49 columns
 - Companion file: `data/processed/retail_reit_profiles.csv` (one row per REIT, used for the map and the summary table)
 - Validation table: `data/processed/validation_table.csv`

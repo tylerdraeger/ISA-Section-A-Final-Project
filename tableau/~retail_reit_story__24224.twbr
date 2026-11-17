@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 
 <!-- build 20262.26.0912.1023                               -->
-<workbook original-version='18.1' source-build='2026.2.3 (20262.26.0912.1023)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+<workbook _.fcp.WorkbookFingerprinting.true...author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-license-type='public' _.fcp.WorkbookFingerprinting.true...creator-machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' _.fcp.WorkbookFingerprinting.true...license-type='public' _.fcp.WorkbookFingerprinting.true...machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' original-version='18.1' source-build='2026.2.3 (20262.26.0912.1023)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <document-format-change-manifest>
     <AnimationOnByDefault />
     <IntuitiveSorting />
@@ -15,6 +15,7 @@
     <SheetIdentifierTracking />
     <VConnDownstreamExtractsWithWarnings />
     <WindowsPersistSimpleIdentifiers />
+    <_.fcp.WorkbookFingerprinting.true...WorkbookFingerprinting />
   </document-format-change-manifest>
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
@@ -25,7 +26,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='Retail REIT quarterly' name='textscan.reitquarterly01'>
-            <connection class='textscan' directory='C:/ISA 401a/ISA-Section-A-Final-Project/data/processed' filename='retail_reit_quarterly.csv' password='' server='' />
+            <connection class='textscan' directory='C:/ISA 401a/ISA-Section-A-Final-Project/data/processed' filename='retail_reit_quarterly.csv' password='' server='' workgroup-auth-mode='as-is' />
           </named-connection>
         </named-connections>
         <relation connection='textscan.reitquarterly01' name='retail_reit_quarterly.csv' table='[retail_reit_quarterly#csv]' type='table'>
@@ -113,7 +114,7 @@
       <column datatype='integer' name='[year]' role='dimension' type='ordinal' />
       <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
       <extract count='-1' enabled='true' object-id='' units='records' user-specific='false'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='Data/Extracts/retail_reit_quarterly.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='11/16/2026 08:30:00 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='Data/Extracts/retail_reit_quarterly.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -128,7 +129,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>company</remote-name>
@@ -142,7 +142,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>property_group</remote-name>
@@ -156,7 +155,6 @@
               <approx-count>3</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>property_type</remote-name>
@@ -170,7 +168,6 @@
               <approx-count>5</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>year</remote-name>
@@ -183,7 +180,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>4</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>quarter</remote-name>
@@ -196,7 +192,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>4</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>quarter_label</remote-name>
@@ -210,7 +205,6 @@
               <approx-count>15</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>quarter_end</remote-name>
@@ -223,7 +217,6 @@
               <aggregation>Year</aggregation>
               <approx-count>15</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>revenue_mm</remote-name>
@@ -236,7 +229,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>347</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>net_income_mm</remote-name>
@@ -249,7 +241,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>343</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>total_assets_mm</remote-name>
@@ -262,7 +253,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>347</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>liabilities_to_assets</remote-name>
@@ -275,7 +265,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>347</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>revenue_source</remote-name>
@@ -289,7 +278,6 @@
               <approx-count>3</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>revenue_q4_derived</remote-name>
@@ -303,7 +291,6 @@
               <approx-count>3</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>filing_date</remote-name>
@@ -316,7 +303,6 @@
               <aggregation>Year</aggregation>
               <approx-count>170</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>accession</remote-name>
@@ -330,7 +316,6 @@
               <approx-count>347</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>property_focus</remote-name>
@@ -344,7 +329,6 @@
               <approx-count>6</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>occupancy_pct</remote-name>
@@ -357,7 +341,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>92</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>same_property_noi_growth_pct</remote-name>
@@ -370,7 +353,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>83</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ffo_per_share</remote-name>
@@ -383,7 +365,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>115</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>core_ffo_per_share</remote-name>
@@ -396,7 +377,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>97</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>rent_spread_pct</remote-name>
@@ -409,7 +389,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>132</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>guidance_change</remote-name>
@@ -423,7 +402,6 @@
               <approx-count>6</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>net_debt_to_ebitda</remote-name>
@@ -436,7 +414,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>44</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>llm_period_year</remote-name>
@@ -449,7 +426,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>5</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>llm_period_quarter</remote-name>
@@ -462,7 +438,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>5</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>llm_period_matches</remote-name>
@@ -476,7 +451,6 @@
               <approx-count>2</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>quarter_end_trade_date</remote-name>
@@ -489,7 +463,6 @@
               <aggregation>Year</aggregation>
               <approx-count>15</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>close_price</remote-name>
@@ -502,7 +475,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>341</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>total_return_q_pct</remote-name>
@@ -515,7 +487,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>354</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>treasury_10y_avg</remote-name>
@@ -528,7 +499,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>15</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>treasury_10y_end</remote-name>
@@ -541,7 +511,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>14</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>treasury_10y_change_bp</remote-name>
@@ -554,7 +523,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>15</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_city</remote-name>
@@ -568,7 +536,6 @@
               <approx-count>19</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_state</remote-name>
@@ -582,7 +549,6 @@
               <approx-count>12</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>nareit_sector</remote-name>
@@ -596,7 +562,6 @@
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>price_on_nareit</remote-name>
@@ -609,7 +574,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>23</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>nareit_as_of</remote-name>
@@ -622,7 +586,6 @@
               <aggregation>Year</aggregation>
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>exchange</remote-name>
@@ -636,7 +599,6 @@
               <approx-count>2</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_zip</remote-name>
@@ -650,7 +612,6 @@
               <approx-count>20</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_1yr_pct</remote-name>
@@ -663,7 +624,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_3yr_cagr_pct</remote-name>
@@ -676,7 +636,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>23</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_5yr_cagr_pct</remote-name>
@@ -689,7 +648,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_10yr_cagr_pct</remote-name>
@@ -702,7 +660,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>18</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>dividend_yield_pct</remote-name>
@@ -715,7 +672,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>trailing_dividend_ps</remote-name>
@@ -728,7 +684,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ffo_for_valuation</remote-name>
@@ -741,7 +696,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>120</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>price_to_ffo</remote-name>
@@ -754,7 +708,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>345</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>ffo_growth_yoy_pct</remote-name>
@@ -767,7 +720,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>176</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_quarterly.csv_C27FEE9556EE408CBF6A1B52BA1D82AD]</object-id>
             </metadata-record>
           </metadata-records>
         </connection>
@@ -860,7 +812,7 @@
       <connection class='federated'>
         <named-connections>
           <named-connection caption='Retail REIT profiles' name='textscan.reitprofiles001'>
-            <connection class='textscan' directory='C:/ISA 401a/ISA-Section-A-Final-Project/data/processed' filename='retail_reit_profiles.csv' password='' server='' />
+            <connection class='textscan' directory='C:/ISA 401a/ISA-Section-A-Final-Project/data/processed' filename='retail_reit_profiles.csv' password='' server='' workgroup-auth-mode='as-is' />
           </named-connection>
         </named-connections>
         <relation connection='textscan.reitprofiles001' name='retail_reit_profiles.csv' table='[retail_reit_profiles#csv]' type='table'>
@@ -909,7 +861,7 @@
       <column caption='10-Yr Treasury Yield a Year Ago (%)' datatype='real' name='[treasury_10y_1yr_ago]' role='measure' type='quantitative' />
       <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
       <extract count='-1' enabled='true' object-id='' units='records' user-specific='false'>
-        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='Data/Extracts/retail_reit_profiles.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='11/16/2026 08:30:00 PM' username='tableau_internal_user'>
+        <connection access_mode='readonly' author-locale='en_US' class='hyper' dbname='Data/Extracts/retail_reit_profiles.hyper' default-settings='hyper' schema='Extract' sslmode='' tablename='Extract' update-time='' username='tableau_internal_user'>
           <relation name='Extract' table='[Extract].[Extract]' type='table' />
           <metadata-records>
             <metadata-record class='column'>
@@ -924,7 +876,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>company</remote-name>
@@ -938,7 +889,6 @@
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>property_group</remote-name>
@@ -952,7 +902,6 @@
               <approx-count>3</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>property_type</remote-name>
@@ -966,7 +915,6 @@
               <approx-count>5</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_city</remote-name>
@@ -980,7 +928,6 @@
               <approx-count>19</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_state</remote-name>
@@ -994,7 +941,6 @@
               <approx-count>12</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>hq_zip</remote-name>
@@ -1008,7 +954,6 @@
               <approx-count>20</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>exchange</remote-name>
@@ -1022,7 +967,6 @@
               <approx-count>2</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>latest_quarter</remote-name>
@@ -1036,7 +980,6 @@
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
               <collation flag='0' name='binary' />
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>occupancy_pct</remote-name>
@@ -1049,7 +992,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>20</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>same_property_noi_growth_pct</remote-name>
@@ -1062,7 +1004,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>16</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>total_assets_mm</remote-name>
@@ -1075,7 +1016,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>21</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>liabilities_to_assets</remote-name>
@@ -1088,7 +1028,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>21</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>price_to_ffo</remote-name>
@@ -1101,7 +1040,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>dividend_yield_pct</remote-name>
@@ -1114,7 +1052,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_1yr_pct</remote-name>
@@ -1127,7 +1064,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_3yr_cagr_pct</remote-name>
@@ -1140,7 +1076,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>23</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>return_5yr_cagr_pct</remote-name>
@@ -1153,7 +1088,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>treasury_10y_1yr_ago</remote-name>
@@ -1166,7 +1100,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>1</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
             <metadata-record class='column'>
               <remote-name>excess_return_1yr_pct</remote-name>
@@ -1179,7 +1112,6 @@
               <aggregation>Sum</aggregation>
               <approx-count>24</approx-count>
               <contains-null>true</contains-null>
-              <object-id>[retail_reit_profiles.csv_159D9CC08ED34A6FAF03AA543EDD29D2]</object-id>
             </metadata-record>
           </metadata-records>
         </connection>
@@ -1725,7 +1657,7 @@
               <format attr='background-color' value='#ffffff' />
             </zone-style>
           </zone>
-          <zone h='24490' id='125' name='1-Year Return vs Treasury' pane-specification-id='0' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='color' w='15817' x='84183' y='12244' />
+          <zone h='24490' id='125' name='1-Year Return vs Treasury' pane-specification-id='1' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='color' w='15817' x='84183' y='12244' />
         </zone>
       </zones>
       <simple-id uuid='{BF3B8C10-AED1-466B-BD50-02C8C9EB3905}' />
@@ -1742,8 +1674,8 @@
       </datasource-dependencies>
       <zones>
         <zone h='100000' id='126' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='98000' id='127' name='Debt Load by REIT' w='82000' x='1000' y='1000' />
-          <zone h='9000' id='128' mode='checkdropdown' name='Debt Load by REIT' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='filter' values='relevant' w='15500' x='83500' y='3000'>
+          <zone h='100000' id='127' name='Debt Load by REIT' w='83673' x='0' y='0' />
+          <zone h='9184' id='128' mode='checkdropdown' name='Debt Load by REIT' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='filter' values='relevant' w='15817' x='84183' y='2040'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -1751,7 +1683,7 @@
               <format attr='background-color' value='#ffffff' />
             </zone-style>
           </zone>
-          <zone h='24000' id='129' name='Debt Load by REIT' pane-specification-id='0' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='color' w='15500' x='83500' y='13000' />
+          <zone h='24490' id='129' name='Debt Load by REIT' pane-specification-id='0' param='[federated.reitprofiles001].[none:property_group:nk]' type-v2='color' w='15817' x='84183' y='12244' />
         </zone>
       </zones>
       <simple-id uuid='{D03D7A6B-9F75-4120-BDF2-5FF926778DF4}' />
@@ -1794,8 +1726,8 @@
       </datasource-dependencies>
       <zones>
         <zone h='100000' id='106' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='98000' id='107' name='Occupancy Trend' w='82000' x='1000' y='1000' />
-          <zone h='9000' id='108' mode='checkdropdown' name='Occupancy Trend' param='[federated.reitquarterly01].[none:property_group:nk]' type-v2='filter' values='relevant' w='15500' x='83500' y='3000'>
+          <zone h='100000' id='107' name='Occupancy Trend' w='83673' x='0' y='0' />
+          <zone h='9184' id='108' mode='checkdropdown' name='Occupancy Trend' param='[federated.reitquarterly01].[none:property_group:nk]' type-v2='filter' values='relevant' w='15817' x='84183' y='2040'>
             <zone-style>
               <format attr='border-color' value='#000000' />
               <format attr='border-style' value='none' />
@@ -1803,7 +1735,7 @@
               <format attr='background-color' value='#ffffff' />
             </zone-style>
           </zone>
-          <zone h='24000' id='109' name='Occupancy Trend' pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type-v2='color' w='15500' x='83500' y='13000' />
+          <zone h='24490' id='109' name='Occupancy Trend' pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type-v2='color' w='15817' x='84183' y='12244' />
         </zone>
       </zones>
       <simple-id uuid='{505174F2-E35A-4710-A7B4-85E20CFFDD6A}' />
@@ -1892,7 +1824,7 @@
       <size maxheight='760' maxwidth='1100' minheight='760' minwidth='1100' sizing-mode='fixed' />
       <zones>
         <zone h='100000' id='104' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='90000' id='105' type-v2='text' w='90000' x='3000' y='5000'>
+          <zone h='100000' id='105' type-v2='text' w='100000' x='0' y='0'>
             <formatted-text>
               <run bold='true' fontcolor='#1f3b57' fontsize='24'>Takeaways</run>
               <run>Æ&#10;</run>
@@ -1927,7 +1859,7 @@
       <size maxheight='760' maxwidth='1100' minheight='760' minwidth='1100' sizing-mode='fixed' />
       <zones>
         <zone h='100000' id='102' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='90000' id='103' type-v2='text' w='52000' x='3000' y='5000'>
+          <zone h='100000' id='103' type-v2='text' w='54166' x='0' y='0'>
             <formatted-text>
               <run bold='true' fontcolor='#1f3b57' fontsize='22'>Retail REITs: Who Is Winning, and Does It Show Up in the Stock?</run>
               <run>Æ&#10;</run>
@@ -1962,7 +1894,7 @@
               <format attr='margin' value='12' />
             </zone-style>
           </zone>
-          <zone h='84000' id='101' name='REITs by Property Type' w='44000' x='55000' y='8000' />
+          <zone h='93333' id='101' name='REITs by Property Type' w='45834' x='54166' y='3333' />
         </zone>
       </zones>
       <simple-id uuid='{369B90D4-F9A3-4873-9832-9AEACBA0FB3B}' />
@@ -2221,7 +2153,7 @@
       <active id='-1' />
       <simple-id uuid='{0453A361-03F9-423E-8383-B1D56A337C27}' />
     </window>
-    <window class='dashboard' maximized='true' name='Dash - 1-Year Return vs Treasury'>
+    <window class='dashboard' name='Dash - 1-Year Return vs Treasury'>
       <viewpoints>
         <viewpoint name='1-Year Return vs Treasury'>
           <zoom type='entire-view' />
@@ -2239,7 +2171,7 @@
       <active id='-1' />
       <simple-id uuid='{54A9FB7A-F9D9-426E-9129-33B2E47DE438}' />
     </window>
-    <window class='dashboard' name='Retail REIT Story'>
+    <window class='dashboard' maximized='true' name='Retail REIT Story'>
       <viewpoints />
       <active id='-1' />
       <simple-id uuid='{9D308656-6685-4FB3-93A8-292F9DAF5ED0}' />
