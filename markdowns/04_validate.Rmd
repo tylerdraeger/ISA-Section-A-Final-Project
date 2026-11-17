@@ -36,6 +36,7 @@ What one row of the final dataset should look like, written as rules:
 | 6 | occupancy is between 80 and 100 | retail REITs do not run below ~80%; above 100 is impossible |
 | 7 | same-property NOI growth is between -15 and +15 percent | anything outside that is almost surely a misread (e.g. year-to-date or a typo) |
 | 8 | FFO per share is between $0 and $5 for a quarter | a negative or huge FFO usually means the wrong line was read (Simon's is really about $3.20, so the cap is $5) |
+| 8b | FFO is at least half of core FFO | a much smaller "FFO" usually means the model grabbed net income per share instead |
 | 9 | revenue is positive | a derived Q4 (full year minus Q1-Q3) can go negative if a tag changed mid-year |
 | 10 | liabilities are less than assets | negative equity is possible but worth a look |
 | 11 | quarterly stock return is between -40% and +40% | bigger moves are rare; check for a split or bad price |
@@ -78,6 +79,9 @@ v[[7]] = df |> filter(!is.na(same_property_noi_growth_pct), abs(same_property_no
 
 v[[8]] = df |> filter(!is.na(ffo_per_share), ffo_per_share <= 0 | ffo_per_share > 5) |>
   flag("8 FFO per share out of range", "ffo_per_share", ffo_per_share)
+
+v[[14]] = df |> filter(!is.na(ffo_per_share), !is.na(core_ffo_per_share), ffo_per_share < 0.5 * core_ffo_per_share) |>
+  flag("8b FFO much lower than core FFO", "ffo_per_share", paste0(ffo_per_share, " vs core ", core_ffo_per_share))
 
 v[[9]] = df |> filter(!is.na(revenue_mm), revenue_mm <= 0) |>
   flag("9 revenue not positive", "revenue_mm", revenue_mm)

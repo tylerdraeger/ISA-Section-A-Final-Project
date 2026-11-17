@@ -55,6 +55,8 @@ Treasury yield. No one source has all of these together.
 
 Raw files go in `data/raw/`; the cleaned and merged files go in `data/processed/`.
 
+The Tableau storyboard is in `tableau/retail_reit_story.twbx` (8 story points: title, occupancy, NOI growth, valuation vs. growth, returns vs. interest rates, 1-year returns, debt load, takeaways). It reads `retail_reit_quarterly.csv` and `retail_reit_profiles.csv`. `tableau/build_twb.py` rebuilds it from those two files.
+
 ### How we handled data problems
 
 - **Different tags for the same thing:** some REITs tag revenue as `Revenues`, others only as `OperatingLeaseLeaseIncome`. Same for net income. We pull all of them and use the first one that exists (`revenue_source` records which one).

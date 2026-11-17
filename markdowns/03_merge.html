@@ -550,9 +550,12 @@ reit_quarterly = step6 |&gt;
   mutate(
     quarter_label = paste0(year, &quot; Q&quot;, quarter),
     quarter_end   = lubridate::ceiling_date(as.Date(paste(year, quarter * 3, 1, sep = &quot;-&quot;)), &quot;month&quot;) - 1,
-    # FFO is quarterly, so x4 to get a yearly number; price / FFO is the REIT version of P/E
-    price_to_ffo  = if_else(!is.na(ffo_per_share) &amp; ffo_per_share &gt; 0,
-                            close_price / (ffo_per_share * 4), NA_real_)
+    # FFO is quarterly, so x4 to get a yearly number; price / FFO is the REIT version of P/E.
+    # We use the company&#39;s core / normalized FFO (or AFFO) when it reports one, because
+    # plain Nareit FFO can swing with one-time items; otherwise plain FFO.
+    ffo_for_valuation = coalesce(core_ffo_per_share, ffo_per_share),
+    price_to_ffo  = if_else(!is.na(ffo_for_valuation) &amp; ffo_for_valuation &gt; 0,
+                            close_price / (ffo_for_valuation * 4), NA_real_)
   ) |&gt;
   relocate(ticker, company, property_group, property_type, year, quarter, quarter_label, quarter_end) |&gt;
   arrange(ticker, year, quarter)</code></pre>
@@ -637,7 +640,7 @@ reit_profiles = reit_quarterly |&gt;
 readr::write_csv(reit_profiles, file.path(proc_dir, &quot;retail_reit_profiles.csv&quot;))
 
 dim(reit_quarterly)</code></pre>
-<pre><code>## [1] 354  47</code></pre>
+<pre><code>## [1] 354  48</code></pre>
 <pre class="r"><code>dim(reit_profiles)</code></pre>
 <pre><code>## [1] 24 18</code></pre>
 </div>

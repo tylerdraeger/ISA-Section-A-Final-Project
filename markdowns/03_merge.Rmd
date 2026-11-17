@@ -75,9 +75,12 @@ reit_quarterly = step6 |>
   mutate(
     quarter_label = paste0(year, " Q", quarter),
     quarter_end   = lubridate::ceiling_date(as.Date(paste(year, quarter * 3, 1, sep = "-")), "month") - 1,
-    # FFO is quarterly, so x4 to get a yearly number; price / FFO is the REIT version of P/E
-    price_to_ffo  = if_else(!is.na(ffo_per_share) & ffo_per_share > 0,
-                            close_price / (ffo_per_share * 4), NA_real_)
+    # FFO is quarterly, so x4 to get a yearly number; price / FFO is the REIT version of P/E.
+    # We use the company's core / normalized FFO (or AFFO) when it reports one, because
+    # plain Nareit FFO can swing with one-time items; otherwise plain FFO.
+    ffo_for_valuation = coalesce(core_ffo_per_share, ffo_per_share),
+    price_to_ffo  = if_else(!is.na(ffo_for_valuation) & ffo_for_valuation > 0,
+                            close_price / (ffo_for_valuation * 4), NA_real_)
   ) |>
   relocate(ticker, company, property_group, property_type, year, quarter, quarter_label, quarter_end) |>
   arrange(ticker, year, quarter)

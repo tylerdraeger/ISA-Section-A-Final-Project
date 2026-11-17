@@ -563,7 +563,7 @@ every profile page and keep every labeled field in long format (one row
 <pre class="r"><code>scrape_detail = function(path) {
   Sys.sleep(1)
   pg = rvest::read_html(paste0(base_url, path))
-  above  = pg |&gt; rvest::html_elements(&quot;div.field.field--label-above&quot;)
+  above  = pg |&gt; rvest::html_elements(&quot;div.field.field--label-above, div.field.field--label-inline&quot;)   # returns are &quot;inline&quot;, dividends are &quot;above&quot;
   inline = pg |&gt; rvest::html_elements(&quot;div.field.element-label-inline&quot;)
   bind_rows(
     tibble(label = above  |&gt; rvest::html_element(&quot;.field__label&quot;) |&gt; rvest::html_text2(),
@@ -575,21 +575,28 @@ every profile page and keep every labeled field in long format (one row
 }
 
 detail_file = file.path(raw_dir, &quot;nareit_detail_raw.csv&quot;)
-if (REFRESH || !file.exists(detail_file)) {
+# re-scrape if the saved file is missing the return fields (an earlier version of this code skipped them)
+if (REFRESH || !file.exists(detail_file) ||
+    !any(grepl(&quot;Total Return&quot;, readr::read_csv(detail_file, show_col_types = FALSE)$label))) {
   nareit_detail = purrr::map_dfr(nareit_list$detail_path, scrape_detail)
   readr::write_csv(nareit_detail, detail_file)
 }
 nareit_detail = readr::read_csv(detail_file, show_col_types = FALSE)
 nareit_detail |&gt; count(label, sort = TRUE)</code></pre>
-<pre><code>## # A tibble: 6 × 2
-##   label                                                 n
-##   &lt;chr&gt;                                             &lt;int&gt;
-## 1 Address                                              24
-## 2 Dividend Yield View definition                       24
-## 3 Ex-Dividend Date View definition                     24
-## 4 Exchange                                             24
-## 5 Ticker                                               24
-## 6 Trailing Year Dividends per Share View definition    23</code></pre>
+<pre><code>## # A tibble: 11 × 2
+##    label                                                 n
+##    &lt;chr&gt;                                             &lt;int&gt;
+##  1 1-Year Total Return                                  24
+##  2 10-Year Compound Annual Total Return                 24
+##  3 2-Year Compound Annual Total Return                  24
+##  4 3-Year Compound Annual Total Return                  24
+##  5 5-Year Compound Annual Total Return                  24
+##  6 Address                                              24
+##  7 Dividend Yield View definition                       24
+##  8 Ex-Dividend Date View definition                     24
+##  9 Exchange                                             24
+## 10 Ticker                                               24
+## 11 Trailing Year Dividends per Share View definition    23</code></pre>
 <p>The ticker is the first piece of text like
 <code>KIM | Jericho, New York | Retail</code>. We need it now to match
 each REIT to the SEC and Yahoo Finance.</p>

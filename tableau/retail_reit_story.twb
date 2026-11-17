@@ -1,0 +1,829 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20262.26.0912.1023                               -->
+<workbook original-version='18.1' source-build='2026.2.3 (20262.26.0912.1023)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <AnimationOnByDefault />
+    <IntuitiveSorting />
+    <IntuitiveSorting_SP2 />
+    <MarkAnimation />
+    <ObjectModelEncapsulateLegacy />
+    <ObjectModelExtractV2 />
+    <ObjectModelTableType />
+    <SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <VConnDownstreamExtractsWithWarnings />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <datasources>
+    <datasource caption="Retail REIT quarterly" inline='true' name='federated.reitquarterly01' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="Retail REIT quarterly" name='textscan.reitquarterly01'>
+            <connection class='textscan' directory="C:/ISA 401a/ISA-Section-A-Final-Project/data/processed" filename='retail_reit_quarterly.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.reitquarterly01' name='retail_reit_quarterly.csv' table='[retail_reit_quarterly#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='ticker' ordinal='0' />
+            <column datatype='string' name='company' ordinal='1' />
+            <column datatype='string' name='property_group' ordinal='2' />
+            <column datatype='string' name='property_type' ordinal='3' />
+            <column datatype='integer' name='year' ordinal='4' />
+            <column datatype='integer' name='quarter' ordinal='5' />
+            <column datatype='string' name='quarter_label' ordinal='6' />
+            <column datatype='date' name='quarter_end' ordinal='7' />
+            <column datatype='real' name='revenue_mm' ordinal='8' />
+            <column datatype='real' name='net_income_mm' ordinal='9' />
+            <column datatype='real' name='total_assets_mm' ordinal='10' />
+            <column datatype='real' name='liabilities_to_assets' ordinal='11' />
+            <column datatype='string' name='revenue_source' ordinal='12' />
+            <column datatype='string' name='revenue_q4_derived' ordinal='13' />
+            <column datatype='date' name='filing_date' ordinal='14' />
+            <column datatype='string' name='accession' ordinal='15' />
+            <column datatype='string' name='property_focus' ordinal='16' />
+            <column datatype='real' name='occupancy_pct' ordinal='17' />
+            <column datatype='real' name='same_property_noi_growth_pct' ordinal='18' />
+            <column datatype='real' name='ffo_per_share' ordinal='19' />
+            <column datatype='real' name='core_ffo_per_share' ordinal='20' />
+            <column datatype='real' name='rent_spread_pct' ordinal='21' />
+            <column datatype='string' name='guidance_change' ordinal='22' />
+            <column datatype='real' name='net_debt_to_ebitda' ordinal='23' />
+            <column datatype='integer' name='llm_period_year' ordinal='24' />
+            <column datatype='integer' name='llm_period_quarter' ordinal='25' />
+            <column datatype='string' name='llm_period_matches' ordinal='26' />
+            <column datatype='date' name='quarter_end_trade_date' ordinal='27' />
+            <column datatype='real' name='close_price' ordinal='28' />
+            <column datatype='real' name='total_return_q_pct' ordinal='29' />
+            <column datatype='real' name='treasury_10y_avg' ordinal='30' />
+            <column datatype='real' name='treasury_10y_end' ordinal='31' />
+            <column datatype='real' name='treasury_10y_change_bp' ordinal='32' />
+            <column datatype='string' name='hq_city' ordinal='33' />
+            <column datatype='string' name='hq_state' ordinal='34' />
+            <column datatype='string' name='nareit_sector' ordinal='35' />
+            <column datatype='real' name='price_on_nareit' ordinal='36' />
+            <column datatype='date' name='nareit_as_of' ordinal='37' />
+            <column datatype='string' name='exchange' ordinal='38' />
+            <column datatype='string' name='hq_zip' ordinal='39' />
+            <column datatype='real' name='return_1yr_pct' ordinal='40' />
+            <column datatype='real' name='return_3yr_cagr_pct' ordinal='41' />
+            <column datatype='real' name='return_5yr_cagr_pct' ordinal='42' />
+            <column datatype='real' name='return_10yr_cagr_pct' ordinal='43' />
+            <column datatype='real' name='dividend_yield_pct' ordinal='44' />
+            <column datatype='real' name='trailing_dividend_ps' ordinal='45' />
+            <column datatype='real' name='ffo_for_valuation' ordinal='46' />
+            <column datatype='real' name='price_to_ffo' ordinal='47' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="retail_reit_quarterly.csv" datatype='table' name='[__tableau_internal_object_id__].[retail_reit_quarterly.csv_675E449B2B6740018A41D1BF1D158A8F]' role='measure' type='quantitative' />
+      <column caption="Ticker" datatype='string' name='[ticker]' role='dimension' type='nominal' />
+      <column caption="Company" datatype='string' name='[company]' role='dimension' type='nominal' />
+      <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+      <column datatype='string' name='[property_type]' role='dimension' type='nominal' />
+      <column datatype='integer' name='[year]' role='dimension' type='ordinal' />
+      <column datatype='integer' name='[quarter]' role='dimension' type='ordinal' />
+      <column caption="Quarter Label" datatype='string' name='[quarter_label]' role='dimension' type='nominal' />
+      <column caption="Quarter" datatype='date' name='[quarter_end]' role='dimension' type='ordinal' />
+      <column caption="Revenue ($M)" datatype='real' name='[revenue_mm]' role='measure' type='quantitative' />
+      <column datatype='real' name='[net_income_mm]' role='measure' type='quantitative' />
+      <column caption="Total Assets ($M)" datatype='real' name='[total_assets_mm]' role='measure' type='quantitative' />
+      <column caption="Liabilities / Assets" datatype='real' name='[liabilities_to_assets]' role='measure' type='quantitative' />
+      <column datatype='string' name='[revenue_source]' role='dimension' type='nominal' />
+      <column datatype='string' name='[revenue_q4_derived]' role='dimension' type='nominal' />
+      <column datatype='date' name='[filing_date]' role='dimension' type='ordinal' />
+      <column datatype='string' name='[accession]' role='dimension' type='nominal' />
+      <column datatype='string' name='[property_focus]' role='dimension' type='nominal' />
+      <column caption="Occupancy (%)" datatype='real' name='[occupancy_pct]' role='measure' type='quantitative' />
+      <column caption="Same-Property NOI Growth (%)" datatype='real' name='[same_property_noi_growth_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[ffo_per_share]' role='measure' type='quantitative' />
+      <column datatype='real' name='[core_ffo_per_share]' role='measure' type='quantitative' />
+      <column caption="Rent Spread (%)" datatype='real' name='[rent_spread_pct]' role='measure' type='quantitative' />
+      <column datatype='string' name='[guidance_change]' role='dimension' type='nominal' />
+      <column caption="Net Debt / EBITDA" datatype='real' name='[net_debt_to_ebitda]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[llm_period_year]' role='dimension' type='ordinal' />
+      <column datatype='integer' name='[llm_period_quarter]' role='dimension' type='ordinal' />
+      <column datatype='string' name='[llm_period_matches]' role='dimension' type='nominal' />
+      <column datatype='date' name='[quarter_end_trade_date]' role='dimension' type='ordinal' />
+      <column datatype='real' name='[close_price]' role='measure' type='quantitative' />
+      <column caption="Quarterly Total Return (%)" datatype='real' name='[total_return_q_pct]' role='measure' type='quantitative' />
+      <column caption="10-Yr Treasury (%)" datatype='real' name='[treasury_10y_avg]' role='measure' type='quantitative' />
+      <column datatype='real' name='[treasury_10y_end]' role='measure' type='quantitative' />
+      <column caption="Change in 10-Yr Treasury (bp)" datatype='real' name='[treasury_10y_change_bp]' role='measure' type='quantitative' />
+      <column caption="HQ City" datatype='string' name='[hq_city]' role='dimension' type='nominal' semantic-role='[City].[Name]' />
+      <column caption="HQ State" datatype='string' name='[hq_state]' role='dimension' type='nominal' semantic-role='[State].[Name]' />
+      <column datatype='string' name='[nareit_sector]' role='dimension' type='nominal' />
+      <column datatype='real' name='[price_on_nareit]' role='measure' type='quantitative' />
+      <column datatype='date' name='[nareit_as_of]' role='dimension' type='ordinal' />
+      <column datatype='string' name='[exchange]' role='dimension' type='nominal' />
+      <column datatype='string' name='[hq_zip]' role='dimension' type='nominal' />
+      <column caption="1-Year Total Return (%)" datatype='real' name='[return_1yr_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[return_3yr_cagr_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[return_5yr_cagr_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[return_10yr_cagr_pct]' role='measure' type='quantitative' />
+      <column caption="Dividend Yield (%)" datatype='real' name='[dividend_yield_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[trailing_dividend_ps]' role='measure' type='quantitative' />
+      <column datatype='real' name='[ffo_for_valuation]' role='measure' type='quantitative' />
+      <column caption="Price / FFO" datatype='real' name='[price_to_ffo]' role='measure' type='quantitative' />
+      <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+      <layout dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style><style-rule element='mark'><encoding attr='color' field='[none:property_group:nk]' type='palette'><map to='#4e79a7'><bucket>&quot;Shopping centers&quot;</bucket></map><map to='#e15759'><bucket>&quot;Malls &amp; outlets&quot;</bucket></map><map to='#59a14f'><bucket>&quot;Net lease&quot;</bucket></map><map to='#bab0ac'><bucket>&quot;Mixed&quot;</bucket></map></encoding></style-rule></style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <object-graph>
+        <objects>
+          <object caption="retail_reit_quarterly.csv" id='retail_reit_quarterly.csv_675E449B2B6740018A41D1BF1D158A8F'>
+            <properties context=''>
+              <relation connection='textscan.reitquarterly01' name='retail_reit_quarterly.csv' table='[retail_reit_quarterly#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='ticker' ordinal='0' />
+            <column datatype='string' name='company' ordinal='1' />
+            <column datatype='string' name='property_group' ordinal='2' />
+            <column datatype='string' name='property_type' ordinal='3' />
+            <column datatype='integer' name='year' ordinal='4' />
+            <column datatype='integer' name='quarter' ordinal='5' />
+            <column datatype='string' name='quarter_label' ordinal='6' />
+            <column datatype='date' name='quarter_end' ordinal='7' />
+            <column datatype='real' name='revenue_mm' ordinal='8' />
+            <column datatype='real' name='net_income_mm' ordinal='9' />
+            <column datatype='real' name='total_assets_mm' ordinal='10' />
+            <column datatype='real' name='liabilities_to_assets' ordinal='11' />
+            <column datatype='string' name='revenue_source' ordinal='12' />
+            <column datatype='string' name='revenue_q4_derived' ordinal='13' />
+            <column datatype='date' name='filing_date' ordinal='14' />
+            <column datatype='string' name='accession' ordinal='15' />
+            <column datatype='string' name='property_focus' ordinal='16' />
+            <column datatype='real' name='occupancy_pct' ordinal='17' />
+            <column datatype='real' name='same_property_noi_growth_pct' ordinal='18' />
+            <column datatype='real' name='ffo_per_share' ordinal='19' />
+            <column datatype='real' name='core_ffo_per_share' ordinal='20' />
+            <column datatype='real' name='rent_spread_pct' ordinal='21' />
+            <column datatype='string' name='guidance_change' ordinal='22' />
+            <column datatype='real' name='net_debt_to_ebitda' ordinal='23' />
+            <column datatype='integer' name='llm_period_year' ordinal='24' />
+            <column datatype='integer' name='llm_period_quarter' ordinal='25' />
+            <column datatype='string' name='llm_period_matches' ordinal='26' />
+            <column datatype='date' name='quarter_end_trade_date' ordinal='27' />
+            <column datatype='real' name='close_price' ordinal='28' />
+            <column datatype='real' name='total_return_q_pct' ordinal='29' />
+            <column datatype='real' name='treasury_10y_avg' ordinal='30' />
+            <column datatype='real' name='treasury_10y_end' ordinal='31' />
+            <column datatype='real' name='treasury_10y_change_bp' ordinal='32' />
+            <column datatype='string' name='hq_city' ordinal='33' />
+            <column datatype='string' name='hq_state' ordinal='34' />
+            <column datatype='string' name='nareit_sector' ordinal='35' />
+            <column datatype='real' name='price_on_nareit' ordinal='36' />
+            <column datatype='date' name='nareit_as_of' ordinal='37' />
+            <column datatype='string' name='exchange' ordinal='38' />
+            <column datatype='string' name='hq_zip' ordinal='39' />
+            <column datatype='real' name='return_1yr_pct' ordinal='40' />
+            <column datatype='real' name='return_3yr_cagr_pct' ordinal='41' />
+            <column datatype='real' name='return_5yr_cagr_pct' ordinal='42' />
+            <column datatype='real' name='return_10yr_cagr_pct' ordinal='43' />
+            <column datatype='real' name='dividend_yield_pct' ordinal='44' />
+            <column datatype='real' name='trailing_dividend_ps' ordinal='45' />
+            <column datatype='real' name='ffo_for_valuation' ordinal='46' />
+            <column datatype='real' name='price_to_ffo' ordinal='47' />
+          </columns>
+        </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+    <datasource caption="Retail REIT profiles" inline='true' name='federated.reitprofiles001' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption="Retail REIT profiles" name='textscan.reitprofiles001'>
+            <connection class='textscan' directory="C:/ISA 401a/ISA-Section-A-Final-Project/data/processed" filename='retail_reit_profiles.csv' password='' server='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.reitprofiles001' name='retail_reit_profiles.csv' table='[retail_reit_profiles#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='ticker' ordinal='0' />
+            <column datatype='string' name='company' ordinal='1' />
+            <column datatype='string' name='property_group' ordinal='2' />
+            <column datatype='string' name='property_type' ordinal='3' />
+            <column datatype='string' name='hq_city' ordinal='4' />
+            <column datatype='string' name='hq_state' ordinal='5' />
+            <column datatype='string' name='hq_zip' ordinal='6' />
+            <column datatype='string' name='exchange' ordinal='7' />
+            <column datatype='string' name='latest_quarter' ordinal='8' />
+            <column datatype='real' name='occupancy_pct' ordinal='9' />
+            <column datatype='real' name='same_property_noi_growth_pct' ordinal='10' />
+            <column datatype='real' name='total_assets_mm' ordinal='11' />
+            <column datatype='real' name='liabilities_to_assets' ordinal='12' />
+            <column datatype='real' name='price_to_ffo' ordinal='13' />
+            <column datatype='real' name='dividend_yield_pct' ordinal='14' />
+            <column datatype='real' name='return_1yr_pct' ordinal='15' />
+            <column datatype='real' name='return_3yr_cagr_pct' ordinal='16' />
+            <column datatype='real' name='return_5yr_cagr_pct' ordinal='17' />
+          </columns>
+        </relation>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption="retail_reit_profiles.csv" datatype='table' name='[__tableau_internal_object_id__].[retail_reit_profiles.csv_7B985A06CB5E4C73984664C87C1A22A2]' role='measure' type='quantitative' />
+      <column caption="Ticker" datatype='string' name='[ticker]' role='dimension' type='nominal' />
+      <column caption="Company" datatype='string' name='[company]' role='dimension' type='nominal' />
+      <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+      <column datatype='string' name='[property_type]' role='dimension' type='nominal' />
+      <column caption="HQ City" datatype='string' name='[hq_city]' role='dimension' type='nominal' semantic-role='[City].[Name]' />
+      <column caption="HQ State" datatype='string' name='[hq_state]' role='dimension' type='nominal' semantic-role='[State].[Name]' />
+      <column datatype='string' name='[hq_zip]' role='dimension' type='nominal' />
+      <column datatype='string' name='[exchange]' role='dimension' type='nominal' />
+      <column datatype='string' name='[latest_quarter]' role='dimension' type='nominal' />
+      <column caption="Occupancy (%)" datatype='real' name='[occupancy_pct]' role='measure' type='quantitative' />
+      <column caption="Same-Property NOI Growth (%)" datatype='real' name='[same_property_noi_growth_pct]' role='measure' type='quantitative' />
+      <column caption="Total Assets ($M)" datatype='real' name='[total_assets_mm]' role='measure' type='quantitative' />
+      <column caption="Liabilities / Assets" datatype='real' name='[liabilities_to_assets]' role='measure' type='quantitative' />
+      <column caption="Price / FFO" datatype='real' name='[price_to_ffo]' role='measure' type='quantitative' />
+      <column caption="Dividend Yield (%)" datatype='real' name='[dividend_yield_pct]' role='measure' type='quantitative' />
+      <column caption="1-Year Total Return (%)" datatype='real' name='[return_1yr_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[return_3yr_cagr_pct]' role='measure' type='quantitative' />
+      <column datatype='real' name='[return_5yr_cagr_pct]' role='measure' type='quantitative' />
+      <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+      <layout dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style><style-rule element='mark'><encoding attr='color' field='[none:property_group:nk]' type='palette'><map to='#4e79a7'><bucket>&quot;Shopping centers&quot;</bucket></map><map to='#e15759'><bucket>&quot;Malls &amp; outlets&quot;</bucket></map><map to='#59a14f'><bucket>&quot;Net lease&quot;</bucket></map><map to='#bab0ac'><bucket>&quot;Mixed&quot;</bucket></map></encoding></style-rule></style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <object-graph>
+        <objects>
+          <object caption="retail_reit_profiles.csv" id='retail_reit_profiles.csv_7B985A06CB5E4C73984664C87C1A22A2'>
+            <properties context=''>
+              <relation connection='textscan.reitprofiles001' name='retail_reit_profiles.csv' table='[retail_reit_profiles#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='string' name='ticker' ordinal='0' />
+            <column datatype='string' name='company' ordinal='1' />
+            <column datatype='string' name='property_group' ordinal='2' />
+            <column datatype='string' name='property_type' ordinal='3' />
+            <column datatype='string' name='hq_city' ordinal='4' />
+            <column datatype='string' name='hq_state' ordinal='5' />
+            <column datatype='string' name='hq_zip' ordinal='6' />
+            <column datatype='string' name='exchange' ordinal='7' />
+            <column datatype='string' name='latest_quarter' ordinal='8' />
+            <column datatype='real' name='occupancy_pct' ordinal='9' />
+            <column datatype='real' name='same_property_noi_growth_pct' ordinal='10' />
+            <column datatype='real' name='total_assets_mm' ordinal='11' />
+            <column datatype='real' name='liabilities_to_assets' ordinal='12' />
+            <column datatype='real' name='price_to_ffo' ordinal='13' />
+            <column datatype='real' name='dividend_yield_pct' ordinal='14' />
+            <column datatype='real' name='return_1yr_pct' ordinal='15' />
+            <column datatype='real' name='return_3yr_cagr_pct' ordinal='16' />
+            <column datatype='real' name='return_5yr_cagr_pct' ordinal='17' />
+          </columns>
+        </relation>
+            </properties>
+          </object>
+        </objects>
+      </object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="Occupancy Trend">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>Net-lease REITs stay almost fully leased; shopping centers keep climbing
+</run><run fontsize='10' fontcolor='#555555'>Average occupancy by property type, quarterly, 2023-2026 (from earnings press releases)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitquarterly01' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitquarterly01'>
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="Quarter" datatype='date' name='[quarter_end]' role='dimension' type='ordinal' />
+            <column caption="Occupancy (%)" datatype='real' name='[occupancy_pct]' role='measure' type='quantitative' />
+            <column-instance column='[occupancy_pct]' derivation='Avg' name='[avg:occupancy_pct:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[quarter_end]' derivation='Quarter-Trunc' name='[tqr:quarter_end:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitquarterly01].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          
+          <slices><column>[federated.reitquarterly01].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitquarterly01].[avg:occupancy_pct:qk]' scope='rows' value="Average occupancy (%)" /><format attr='title' class='0' field='[federated.reitquarterly01].[tqr:quarter_end:qk]' scope='cols' value="Quarter" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+            <encodings>
+              <color column='[federated.reitquarterly01].[none:property_group:nk]' />
+            </encodings>
+            
+          </pane>
+        </panes>
+        <rows>[federated.reitquarterly01].[avg:occupancy_pct:qk]</rows>
+        <cols>[federated.reitquarterly01].[tqr:quarter_end:qk]</cols>
+      </table>
+      <simple-id uuid='{3BE14B88-1861-4B90-8A1B-CFB684A923BE}' />
+    </worksheet>
+    <worksheet name="NOI Growth Trend">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>Shopping centers grow rent from the same properties faster than malls
+</run><run fontsize='10' fontcolor='#555555'>Average year-over-year same-property NOI growth by property type (net-lease REITs do not report it)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitquarterly01' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitquarterly01'>
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="Quarter" datatype='date' name='[quarter_end]' role='dimension' type='ordinal' />
+            <column caption="Same-Property NOI Growth (%)" datatype='real' name='[same_property_noi_growth_pct]' role='measure' type='quantitative' />
+            <column-instance column='[same_property_noi_growth_pct]' derivation='Avg' name='[avg:same_property_noi_growth_pct:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[quarter_end]' derivation='Quarter-Trunc' name='[tqr:quarter_end:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitquarterly01].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          
+          <slices><column>[federated.reitquarterly01].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitquarterly01].[avg:same_property_noi_growth_pct:qk]' scope='rows' value="Same-property NOI growth (%)" /><format attr='title' class='0' field='[federated.reitquarterly01].[tqr:quarter_end:qk]' scope='cols' value="Quarter" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+            <encodings>
+              <color column='[federated.reitquarterly01].[none:property_group:nk]' />
+            </encodings>
+            
+          </pane>
+        </panes>
+        <rows>[federated.reitquarterly01].[avg:same_property_noi_growth_pct:qk]</rows>
+        <cols>[federated.reitquarterly01].[tqr:quarter_end:qk]</cols>
+      </table>
+      <simple-id uuid='{7C0862C2-5B0E-4936-838D-C58D8988700B}' />
+    </worksheet>
+    <worksheet name="Valuation vs Growth">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>Does faster growth earn a higher valuation?
+</run><run fontsize='10' fontcolor='#555555'>Each dot is one REIT: average same-property NOI growth vs. average price / annualized core FFO, 2023-2026</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitquarterly01' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitquarterly01'>
+            <column caption="Ticker" datatype='string' name='[ticker]' role='dimension' type='nominal' />
+            <column caption="Company" datatype='string' name='[company]' role='dimension' type='nominal' />
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="Same-Property NOI Growth (%)" datatype='real' name='[same_property_noi_growth_pct]' role='measure' type='quantitative' />
+            <column caption="Price / FFO" datatype='real' name='[price_to_ffo]' role='measure' type='quantitative' />
+            <column-instance column='[price_to_ffo]' derivation='Avg' name='[avg:price_to_ffo:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[same_property_noi_growth_pct]' derivation='Avg' name='[avg:same_property_noi_growth_pct:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[ticker]' derivation='None' name='[none:ticker:nk]' pivot='key' type='nominal' />
+            <column-instance column='[company]' derivation='None' name='[none:company:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitquarterly01].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          
+          <slices><column>[federated.reitquarterly01].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitquarterly01].[avg:price_to_ffo:qk]' scope='rows' value="Price / FFO (x)" /><format attr='title' class='0' field='[federated.reitquarterly01].[avg:same_property_noi_growth_pct:qk]' scope='cols' value="Avg same-property NOI growth (%)" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <color column='[federated.reitquarterly01].[none:property_group:nk]' /><text column='[federated.reitquarterly01].[none:ticker:nk]' /><lod column='[federated.reitquarterly01].[none:company:nk]' />
+            </encodings>
+            <style><style-rule element='mark'><format attr='mark-labels-show' value='true' /><format attr='mark-labels-cull' value='true' /></style-rule></style>
+          </pane>
+        </panes>
+        <rows>[federated.reitquarterly01].[avg:price_to_ffo:qk]</rows>
+        <cols>[federated.reitquarterly01].[avg:same_property_noi_growth_pct:qk]</cols>
+      </table>
+      <simple-id uuid='{BCA5923F-3F89-4343-B78F-7C06EE41E437}' />
+    </worksheet>
+    <worksheet name="Returns vs Rates">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>When the 10-year Treasury jumps, retail REIT stocks fall
+</run><run fontsize='10' fontcolor='#555555'>Each dot is one property type in one quarter: change in the 10-year yield vs. average stock total return</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitquarterly01' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitquarterly01'>
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="Quarter Label" datatype='string' name='[quarter_label]' role='dimension' type='nominal' />
+            <column caption="Quarterly Total Return (%)" datatype='real' name='[total_return_q_pct]' role='measure' type='quantitative' />
+            <column caption="Change in 10-Yr Treasury (bp)" datatype='real' name='[treasury_10y_change_bp]' role='measure' type='quantitative' />
+            <column-instance column='[total_return_q_pct]' derivation='Avg' name='[avg:total_return_q_pct:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[treasury_10y_change_bp]' derivation='Avg' name='[avg:treasury_10y_change_bp:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[quarter_label]' derivation='None' name='[none:quarter_label:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitquarterly01].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          
+          <slices><column>[federated.reitquarterly01].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitquarterly01].[avg:total_return_q_pct:qk]' scope='rows' value="Avg quarterly total return (%)" /><format attr='title' class='0' field='[federated.reitquarterly01].[avg:treasury_10y_change_bp:qk]' scope='cols' value="Change in 10-yr Treasury yield (basis points)" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <color column='[federated.reitquarterly01].[none:property_group:nk]' /><lod column='[federated.reitquarterly01].[none:quarter_label:nk]' />
+            </encodings>
+            
+          </pane>
+        </panes>
+        <rows>[federated.reitquarterly01].[avg:total_return_q_pct:qk]</rows>
+        <cols>[federated.reitquarterly01].[avg:treasury_10y_change_bp:qk]</cols>
+      </table>
+      <simple-id uuid='{232CE604-70CB-44BD-B847-9EAF7C76EF2F}' />
+    </worksheet>
+    <worksheet name="1-Year Return by REIT">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>Who won the last year?
+</run><run fontsize='10' fontcolor='#555555'>1-year total return by REIT as of Nov 13, 2026 (scraped from Nareit's REIT directory)</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitprofiles001' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitprofiles001'>
+            <column caption="Ticker" datatype='string' name='[ticker]' role='dimension' type='nominal' />
+            <column caption="Company" datatype='string' name='[company]' role='dimension' type='nominal' />
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="1-Year Total Return (%)" datatype='real' name='[return_1yr_pct]' role='measure' type='quantitative' />
+            <column-instance column='[ticker]' derivation='None' name='[none:ticker:nk]' pivot='key' type='nominal' />
+            <column-instance column='[return_1yr_pct]' derivation='Sum' name='[sum:return_1yr_pct:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[company]' derivation='None' name='[none:company:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitprofiles001].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          <shelf-sorts><shelf-sort-v2 dimension-to-sort='[federated.reitprofiles001].[none:ticker:nk]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.reitprofiles001].[sum:return_1yr_pct:qk]' shelf='rows' /></shelf-sorts>
+          <slices><column>[federated.reitprofiles001].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitprofiles001].[sum:return_1yr_pct:qk]' scope='cols' value="1-year total return (%)" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.reitprofiles001].[none:property_group:nk]' /><text column='[federated.reitprofiles001].[sum:return_1yr_pct:qk]' /><lod column='[federated.reitprofiles001].[none:company:nk]' />
+            </encodings>
+            <style><style-rule element='mark'><format attr='mark-labels-show' value='true' /><format attr='mark-labels-cull' value='true' /></style-rule></style>
+          </pane>
+        </panes>
+        <rows>[federated.reitprofiles001].[none:ticker:nk]</rows>
+        <cols>[federated.reitprofiles001].[sum:return_1yr_pct:qk]</cols>
+      </table>
+      <simple-id uuid='{5F4F7C7A-EF51-4D9F-B8E8-F4DB5DEDCF38}' />
+    </worksheet>
+    <worksheet name="Debt Load by REIT">
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>Malls carry the most debt
+</run><run fontsize='10' fontcolor='#555555'>Total liabilities as a share of total assets, latest quarter on file with the SEC</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.reitprofiles001' />
+          </datasources>
+          <datasource-dependencies datasource='federated.reitprofiles001'>
+            <column caption="Ticker" datatype='string' name='[ticker]' role='dimension' type='nominal' />
+            <column caption="Company" datatype='string' name='[company]' role='dimension' type='nominal' />
+            <column caption="Property Type" datatype='string' name='[property_group]' role='dimension' type='nominal' />
+            <column caption="Liabilities / Assets" datatype='real' name='[liabilities_to_assets]' role='measure' type='quantitative' />
+            <column-instance column='[ticker]' derivation='None' name='[none:ticker:nk]' pivot='key' type='nominal' />
+            <column-instance column='[liabilities_to_assets]' derivation='Sum' name='[sum:liabilities_to_assets:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />
+            <column-instance column='[company]' derivation='None' name='[none:company:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.reitprofiles001].[none:property_group:nk]'><groupfilter function='level-members' level='[none:property_group:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          <shelf-sorts><shelf-sort-v2 dimension-to-sort='[federated.reitprofiles001].[none:ticker:nk]' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='[federated.reitprofiles001].[sum:liabilities_to_assets:qk]' shelf='rows' /></shelf-sorts>
+          <slices><column>[federated.reitprofiles001].[none:property_group:nk]</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style><style-rule element='axis'><format attr='title' class='0' field='[federated.reitprofiles001].[sum:liabilities_to_assets:qk]' scope='cols' value="Liabilities / assets" /></style-rule></style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='[federated.reitprofiles001].[none:property_group:nk]' /><lod column='[federated.reitprofiles001].[none:company:nk]' />
+            </encodings>
+            
+          </pane>
+        </panes>
+        <rows>[federated.reitprofiles001].[none:ticker:nk]</rows>
+        <cols>[federated.reitprofiles001].[sum:liabilities_to_assets:qk]</cols>
+      </table>
+      <simple-id uuid='{561BDAFB-B026-488C-9A50-1FA306863B08}' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="Title">
+      <style />
+      <size maxheight='760' maxwidth='1100' minheight='760' minwidth='1100' sizing-mode='fixed' />
+      <datasources />
+      <zones>
+        <zone h='760' id='101' type-v2='layout-basic' w='1100' x='0' y='0'>
+          <zone h='680' id='102' type-v2='text' w='980' x='60' y='40'>
+            <formatted-text><run bold='true' fontcolor='#1f3b57' fontsize='26'>Retail REITs: Who Is Winning, and Does It Show Up in the Stock?</run><run>&#10;</run><run>&#10;</run><run bold='true' fontcolor='#333333' fontsize='15'>ISA 401 Final Project  |  Fall 2026  |  Section A  |  Team [#]</run><run>&#10;</run><run fontcolor='#333333' fontsize='15'>Tyler Draeger  &amp;  Kenneth Kelly</run><run>&#10;</run><run>&#10;</run><run bold='true' fontcolor='#1f3b57' fontsize='16'>The question</run><run>&#10;</run><run fontcolor='#333333' fontsize='14'>Among the 24 publicly traded U.S. retail REITs, are shopping center owners doing better than malls and net-lease REITs on occupancy and rent growth, and does that show up in stock returns and valuations, or do interest rates matter more?</run><run>&#10;</run><run>&#10;</run><run bold='true' fontcolor='#1f3b57' fontsize='16'>Where the data comes from</run><run>&#10;</run><run fontcolor='#333333' fontsize='13'>- Nareit REIT directory (web scraping): the list of retail REITs, returns, dividend yields, headquarters</run><run>&#10;</run><run fontcolor='#333333' fontsize='13'>- SEC EDGAR (API): revenue, net income, assets, and liabilities every quarter</run><run>&#10;</run><run fontcolor='#333333' fontsize='13'>- 370 quarterly earnings press releases (LLM extraction): occupancy, same-property NOI growth, FFO</run><run>&#10;</run><run fontcolor='#333333' fontsize='13'>- FRED (API): 10-year Treasury yield   |   Yahoo Finance (API): daily stock prices</run><run>&#10;</run><run>&#10;</run><run fontcolor='#666666' fontsize='12'>Use the Property Type filter on each page to focus on one group. Hover over any mark for details.</run></formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='12' />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+      <simple-id uuid='{383E61EC-0133-4E5C-A5EC-656AD2EFEA20}' />
+    </dashboard>
+    <dashboard name="Takeaways">
+      <style />
+      <size maxheight='760' maxwidth='1100' minheight='760' minwidth='1100' sizing-mode='fixed' />
+      <datasources />
+      <zones>
+        <zone h='760' id='103' type-v2='layout-basic' w='1100' x='0' y='0'>
+          <zone h='680' id='104' type-v2='text' w='980' x='60' y='40'>
+            <formatted-text><run bold='true' fontcolor='#1f3b57' fontsize='24'>Takeaways</run><run>&#10;</run><run>&#10;</run><run fontcolor='#333333' fontsize='14'>1.  Shopping centers have the strongest fundamentals: occupancy keeps rising and same-property NOI grows about 4% a year, faster than malls.</run><run>&#10;</run><run>&#10;</run><run fontcolor='#333333' fontsize='14'>2.  Malls are the cheapest and most indebted group, and the stocks bounced the most as investors came back to them.</run><run>&#10;</run><run>&#10;</run><run fontcolor='#333333' fontsize='14'>3.  Net-lease REITs are almost 100% leased but behave like bonds: their returns move the most with the 10-year Treasury.</run><run>&#10;</run><run>&#10;</run><run fontcolor='#333333' fontsize='14'>4.  Interest rates still drive a lot of the quarter-to-quarter stock moves for every group, so strong property results do not always show up in the stock right away.</run><run>&#10;</run><run>&#10;</run><run fontcolor='#666666' fontsize='12'>Limits: 2023-2026 only; FFO and occupancy come from company press releases (checked against the text); a few of the newest quarters are not in the SEC data yet.</run></formatted-text>
+            <zone-style>
+              <format attr='border-color' value='#000000' />
+              <format attr='border-style' value='none' />
+              <format attr='border-width' value='0' />
+              <format attr='margin' value='12' />
+            </zone-style>
+          </zone>
+        </zone>
+      </zones>
+      <simple-id uuid='{BFA927C6-1168-4BBC-97EA-CD38E501B5C4}' />
+    </dashboard>
+    <dashboard name='Retail REIT Story' type='storyboard'>
+      <style />
+      <size maxheight='900' maxwidth='1100' minheight='900' minwidth='1100' sizing-mode='fixed' />
+      <datasources />
+      <zones>
+        <zone h='900' id='107' type-v2='layout-basic' w='1100' x='0' y='0'>
+          <zone h='900' id='108' param='vert' type-v2='layout-flow' w='1100' x='0' y='0'>
+            <zone h='36' id='109' type-v2='title' w='1100' x='0' y='0' />
+            <zone h='90' id='105' is-fixed='true' paired-zone-id='106' type-v2='flipboard-nav' w='1100' x='0' y='36' />
+            <zone h='774' id='106' paired-zone-id='105' type-v2='flipboard' w='1100' x='0' y='126'>
+              <flipboard active-id='1' nav-type='caption' show-nav-arrows='true'>
+                <story-points>
+                <story-point captured-sheet="Title" caption="Retail REITs: the question" id='1' />
+                <story-point captured-sheet="Occupancy Trend" caption="Occupancy: net lease is full, centers are catching up" id='2' />
+                <story-point captured-sheet="NOI Growth Trend" caption="Growth: shopping centers lead" id='3' />
+                <story-point captured-sheet="Valuation vs Growth" caption="Is growth rewarded?" id='4' />
+                <story-point captured-sheet="Returns vs Rates" caption="Interest rates move the stocks" id='5' />
+                <story-point captured-sheet="1-Year Return by REIT" caption="Last year's winners" id='6' />
+                <story-point captured-sheet="Debt Load by REIT" caption="Who carries the most debt" id='7' />
+                <story-point captured-sheet="Takeaways" caption="Takeaways" id='8' />
+                </story-points>
+              </flipboard>
+            </zone>
+          </zone>
+        </zone>
+      </zones>
+      <simple-id uuid='{6348E9FF-6F8B-401C-8EFC-7F541E07DEF2}' />
+    </dashboard>
+  </dashboards>
+  <windows source-height='30'>
+    <window class='worksheet' name="Occupancy Trend">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitquarterly01].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{C0CE28B7-44FF-4253-9FDA-2B8851B985D0}' />
+    </window>
+    <window class='worksheet' name="NOI Growth Trend">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitquarterly01].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{45A73B69-AA29-4262-9483-223170BE77B5}' />
+    </window>
+    <window class='worksheet' name="Valuation vs Growth">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitquarterly01].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{A7F4894E-9085-4879-85F7-C28B9AD50DE3}' />
+    </window>
+    <window class='worksheet' name="Returns vs Rates">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitquarterly01].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitquarterly01].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{241143F3-E31C-4969-84EE-52208DB2C5E2}' />
+    </window>
+    <window class='worksheet' name="1-Year Return by REIT">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitprofiles001].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitprofiles001].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{706E5956-0D05-4E99-AFE0-BEC15CC3694E}' />
+    </window>
+    <window class='worksheet' name="Debt Load by REIT">
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='[federated.reitprofiles001].[none:property_group:nk]' type='filter' values='relevant' />
+            <card pane-specification-id='0' param='[federated.reitprofiles001].[none:property_group:nk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{19731230-E8CB-4BF8-87DB-8E45A342867C}' />
+    </window>
+    <window class='dashboard' name="Title">
+      <viewpoints />
+      <active id='-1' />
+      <simple-id uuid='{1B913259-E254-409E-9E64-218C15464525}' />
+    </window>
+    <window class='dashboard' name="Takeaways">
+      <viewpoints />
+      <active id='-1' />
+      <simple-id uuid='{D47D8E0A-BA7A-4266-8062-8D4218F9E484}' />
+    </window>
+    <window class='dashboard' maximized='true' name='Retail REIT Story'>
+      <viewpoints />
+      <active id='-1' />
+      <simple-id uuid='{E3E74CD7-D209-4627-845F-D36D6D3EC568}' />
+    </window>
+  </windows>
+</workbook>

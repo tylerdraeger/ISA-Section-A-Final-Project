@@ -101,7 +101,7 @@ labeled field in long format (one row = one field on one REIT's page). It gets r
 scrape_detail = function(path) {
   Sys.sleep(1)
   pg = rvest::read_html(paste0(base_url, path))
-  above  = pg |> rvest::html_elements("div.field.field--label-above")
+  above  = pg |> rvest::html_elements("div.field.field--label-above, div.field.field--label-inline")   # returns are "inline", dividends are "above"
   inline = pg |> rvest::html_elements("div.field.element-label-inline")
   bind_rows(
     tibble(label = above  |> rvest::html_element(".field__label") |> rvest::html_text2(),
@@ -113,7 +113,9 @@ scrape_detail = function(path) {
 }
 
 detail_file = file.path(raw_dir, "nareit_detail_raw.csv")
-if (REFRESH || !file.exists(detail_file)) {
+# re-scrape if the saved file is missing the return fields (an earlier version of this code skipped them)
+if (REFRESH || !file.exists(detail_file) ||
+    !any(grepl("Total Return", readr::read_csv(detail_file, show_col_types = FALSE)$label))) {
   nareit_detail = purrr::map_dfr(nareit_list$detail_path, scrape_detail)
   readr::write_csv(nareit_detail, detail_file)
 }

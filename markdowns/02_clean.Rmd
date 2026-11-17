@@ -70,7 +70,7 @@ detail_clean = detail_wide |>
   transmute(
     detail_path,
     exchange          = stringr::str_extract(Exchange, "(?<=\\()[A-Z]+(?=\\))"),
-    hq_zip            = stringr::str_extract(Address, "\\b\\d{5}\\b"),
+    hq_zip            = stringr::str_match(Address, "(?s).*\\b(\\d{5})\\b")[, 2],   # last 5-digit number (street numbers can be 5 digits too)
     return_1yr_pct    = readr::parse_number(`1-Year Total Return`),
     return_3yr_cagr_pct  = readr::parse_number(`3-Year Compound Annual Total Return`),
     return_5yr_cagr_pct  = readr::parse_number(`5-Year Compound Annual Total Return`),
