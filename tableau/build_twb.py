@@ -4,7 +4,7 @@ from xml.sax.saxutils import escape, quoteattr
 
 DIR = "C:/ISA 401a/ISA-Section-A-Final-Project/data/processed"
 Q, P = "federated.reitquarterly01", "federated.reitprofiles001"
-TEAM = "Team [#]"
+TEAM = "Team 15"
 
 Q_COLS = [
     ("ticker", "string"), ("company", "string"), ("property_group", "string"), ("property_type", "string"),

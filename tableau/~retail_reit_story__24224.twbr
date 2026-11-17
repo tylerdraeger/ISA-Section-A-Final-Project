@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8' ?>
 
 <!-- build 20262.26.0912.1023                               -->
-<workbook _.fcp.WorkbookFingerprinting.true...author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-license-type='public' _.fcp.WorkbookFingerprinting.true...creator-machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' _.fcp.WorkbookFingerprinting.true...license-type='public' _.fcp.WorkbookFingerprinting.true...machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' original-version='18.1' source-build='2026.2.3 (20262.26.0912.1023)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+<workbook _.fcp.WorkbookFingerprinting.true...author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-author-id='ca5eabc893559523bd3d44a71012a8434a463b190dcac86d969f397d06a3f0c8' _.fcp.WorkbookFingerprinting.true...creator-license-type='public' _.fcp.WorkbookFingerprinting.true...creator-machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' _.fcp.WorkbookFingerprinting.true...license-type='public' _.fcp.WorkbookFingerprinting.true...machine-id='c9e64fe6b3c407ce8032cecc34501331bbd3406a3d25cc97d6eb9ce65c511839' original-version='18.1' source-build='2026.2.3 (20262.26.0912.1023)' source-platform='win' version='18.1' xml:base='https://public.tableau.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <document-format-change-manifest>
     <AnimationOnByDefault />
     <IntuitiveSorting />
@@ -17,6 +17,7 @@
     <WindowsPersistSimpleIdentifiers />
     <_.fcp.WorkbookFingerprinting.true...WorkbookFingerprinting />
   </document-format-change-manifest>
+  <repository-location id='retail_reit_story' path='/workbooks' revision='1.0' />
   <preferences>
     <preference name='ui.encoding.shelf.height' value='24' />
     <preference name='ui.shelf.height' value='26' />
@@ -2112,7 +2113,7 @@
       <active id='-1' />
       <simple-id uuid='{782CF458-5CA2-4382-9B70-465C4AE57393}' />
     </window>
-    <window class='dashboard' name='Takeaways'>
+    <window class='dashboard' maximized='true' name='Takeaways'>
       <viewpoints />
       <active id='-1' />
       <simple-id uuid='{84AC735E-142D-4513-B761-AF96F7FDF54D}' />
@@ -2171,7 +2172,7 @@
       <active id='-1' />
       <simple-id uuid='{54A9FB7A-F9D9-426E-9129-33B2E47DE438}' />
     </window>
-    <window class='dashboard' maximized='true' name='Retail REIT Story'>
+    <window class='dashboard' name='Retail REIT Story'>
       <viewpoints />
       <active id='-1' />
       <simple-id uuid='{9D308656-6685-4FB3-93A8-292F9DAF5ED0}' />

@@ -1,12 +1,12 @@
 # Retail REITs: Who Is Winning, and Does It Show Up in the Stock?
 
-ISA 401 Final Project, Fall 2026, Team [number], Section A
+ISA 401 Final Project, Fall 2026, Team 15, Section A
 
 ## Submission
 
 | Item | Link |
 |---|---|
-| Dashboard (Tableau Public) | https://public.tableau.com/app/profile/tyler.draeger/viz/retail_reit_story/RetailREITStory?publish=yes |
+| Dashboard (Tableau Public) | https://public.tableau.com/app/profile/tyler.draeger/viz/retail_reit_story/RetailREITStory |
 | Recorded technical presentation (YouTube, unlisted) | [link] |
 | This repository | https://github.com/tylerdraeger/ISA-Section-A-Final-Project |
 
@@ -14,8 +14,8 @@ ISA 401 Final Project, Fall 2026, Team [number], Section A
 
 | Member | What I built | Portfolio project entry |
 |---|---|---|
-| Tyler Draeger | [for example: the SEC API pulls and the LLM extraction] | [https://USERNAME.github.io/portfolio/#...] |
-| Kenneth Kelly | [ ] | [ ] |
+| Tyler Draeger | Data collection and cleaning in R (web scraping, APIs, LLM extraction) and the Tableau dashboard | [https://USERNAME.github.io/portfolio/#...] |
+| Kenneth Kelly | Checking the data and results, and the presentations | [ ] |
 
 Each member adds this project to their own portfolio site, in their own words, with a link
 back to this repository and the dashboard, and updates the Skills section of their portfolio
