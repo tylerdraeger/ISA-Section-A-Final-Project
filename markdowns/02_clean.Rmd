@@ -226,7 +226,9 @@ focus_by_reit = llm_clean |>
 # A simpler three-way grouping for the dashboard
 focus_by_reit = focus_by_reit |>
   mutate(property_group = case_when(
-    property_type %in% c("grocery_anchored_center", "open_air_center") ~ "Shopping centers",
+    # CTO is labeled "mixed" (it also owns some office), but most of its portfolio is open-air
+    # shopping centers, so we group it with the shopping center REITs
+    property_type %in% c("grocery_anchored_center", "open_air_center", "mixed") ~ "Shopping centers",
     property_type == "mall_outlet" ~ "Malls & outlets",
     property_type == "net_lease"   ~ "Net lease",
     TRUE ~ "Mixed"))

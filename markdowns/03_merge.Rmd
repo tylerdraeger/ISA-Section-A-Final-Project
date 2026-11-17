@@ -83,7 +83,12 @@ reit_quarterly = step6 |>
                             close_price / (ffo_for_valuation * 4), NA_real_)
   ) |>
   relocate(ticker, company, property_group, property_type, year, quarter, quarter_label, quarter_end) |>
-  arrange(ticker, year, quarter)
+  arrange(ticker, year, quarter) |>
+  # FFO growth vs. the same quarter a year earlier. Net-lease REITs do not report same-property
+  # NOI, but every REIT reports FFO, so this lets us compare growth across all three groups.
+  group_by(ticker) |>
+  mutate(ffo_growth_yoy_pct = (ffo_for_valuation / lag(ffo_for_valuation, 4) - 1) * 100) |>
+  ungroup()
 ```
 
 ## Check the join
@@ -135,6 +140,19 @@ reit_profiles = reit_quarterly |>
          latest_quarter = quarter_label, occupancy_pct, same_property_noi_growth_pct,
          total_assets_mm, liabilities_to_assets, price_to_ffo,
          dividend_yield_pct, return_1yr_pct, return_3yr_cagr_pct, return_5yr_cagr_pct)
+# Compare each REIT's 1-year return with what a 10-year Treasury bought one year earlier paid.
+# The Nareit returns are "as of" one date, so we take the 10-year yield on the last trading day
+# on or before one year before that date (from the raw FRED file).
+dgs10_daily = readr::read_csv("../data/raw/fred_dgs10_raw.csv", col_types = "cc") |>
+  mutate(date = as.Date(date), dgs10 = suppressWarnings(as.numeric(value))) |>
+  filter(!is.na(dgs10))
+as_of_date = max(nareit$nareit_as_of, na.rm = TRUE)
+tsy_1yr_ago = dgs10_daily |> filter(date <= as_of_date - 365) |> slice_max(date, n = 1) |> pull(dgs10)
+
+reit_profiles = reit_profiles |>
+  mutate(treasury_10y_1yr_ago = tsy_1yr_ago,
+         excess_return_1yr_pct = return_1yr_pct - treasury_10y_1yr_ago)
+
 readr::write_csv(reit_profiles, file.path(proc_dir, "retail_reit_profiles.csv"))
 
 dim(reit_quarterly)

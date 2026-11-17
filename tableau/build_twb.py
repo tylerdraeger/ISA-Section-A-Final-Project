@@ -21,7 +21,7 @@ Q_COLS = [
     ("nareit_as_of", "date"), ("exchange", "string"), ("hq_zip", "string"), ("return_1yr_pct", "real"),
     ("return_3yr_cagr_pct", "real"), ("return_5yr_cagr_pct", "real"), ("return_10yr_cagr_pct", "real"),
     ("dividend_yield_pct", "real"), ("trailing_dividend_ps", "real"), ("ffo_for_valuation", "real"),
-    ("price_to_ffo", "real"),
+    ("price_to_ffo", "real"), ("ffo_growth_yoy_pct", "real"),
 ]
 P_COLS = [
     ("ticker", "string"), ("company", "string"), ("property_group", "string"), ("property_type", "string"),
@@ -29,7 +29,7 @@ P_COLS = [
     ("latest_quarter", "string"), ("occupancy_pct", "real"), ("same_property_noi_growth_pct", "real"),
     ("total_assets_mm", "real"), ("liabilities_to_assets", "real"), ("price_to_ffo", "real"),
     ("dividend_yield_pct", "real"), ("return_1yr_pct", "real"), ("return_3yr_cagr_pct", "real"),
-    ("return_5yr_cagr_pct", "real"),
+    ("return_5yr_cagr_pct", "real"), ("treasury_10y_1yr_ago", "real"), ("excess_return_1yr_pct", "real"),
 ]
 CAPTIONS = {
     "ticker": "Ticker", "company": "Company", "property_group": "Property Type", "quarter_end": "Quarter",
@@ -39,9 +39,10 @@ CAPTIONS = {
     "treasury_10y_avg": "10-Yr Treasury (%)", "return_1yr_pct": "1-Year Total Return (%)",
     "liabilities_to_assets": "Liabilities / Assets", "hq_state": "HQ State", "hq_city": "HQ City",
     "dividend_yield_pct": "Dividend Yield (%)", "revenue_mm": "Revenue ($M)", "rent_spread_pct": "Rent Spread (%)",
-    "net_debt_to_ebitda": "Net Debt / EBITDA", "total_assets_mm": "Total Assets ($M)",
+    "net_debt_to_ebitda": "Net Debt / EBITDA",
+    "treasury_10y_1yr_ago": "10-Yr Treasury Yield a Year Ago (%)", "excess_return_1yr_pct": "Return Above Treasury (pts)", "total_assets_mm": "Total Assets ($M)",
 }
-GROUP_COLORS = {"Shopping centers": "#4e79a7", "Malls & outlets": "#e15759", "Net lease": "#59a14f", "Mixed": "#bab0ac"}
+GROUP_COLORS = {"Shopping centers": "#4e79a7", "Malls & outlets": "#e15759", "Net lease": "#59a14f"}
 
 
 def uid():
@@ -56,6 +57,22 @@ def role(dt, name):
     if dt == "integer":
         return "dimension", "ordinal"
     return "dimension", "nominal"
+
+
+CALC = {
+    "rate_move": ("10-Yr Treasury Move", "string", "dimension", "nominal",
+                  'IF [treasury_10y_change_bp] > 25 THEN "Rates rose 25+ bp" '
+                  'ELSEIF [treasury_10y_change_bp] < -25 THEN "Rates fell 25+ bp" '
+                  'ELSE "Rates flat (within 25 bp)" END'),
+    "reit_count": ("Number of REITs", "integer", "measure", "quantitative", "1"),
+}
+CALC_DS = {"rate_move": "q", "reit_count": "p"}
+
+
+def calc_decl(name):
+    cap, dt, rl, ty, f = CALC[name]
+    return (f"<column caption={quoteattr(cap)} datatype='{dt}' name='[{name}]' role='{rl}' type='{ty}'>"
+            f"<calculation class='tableau' formula={quoteattr(f)} /></column>")
 
 
 def col_decl(name, dt):
@@ -103,6 +120,8 @@ def datasource(ds, caption, fname, cols, conn):
         </connection>
       </extract>"""
     decls = "\n".join("      " + col_decl(n, dt) for n, dt in cols)
+    which = "q" if fname.startswith("retail_reit_quarterly") else "p"
+    decls += "\n" + "\n".join("      " + calc_decl(c) for c, w in CALC_DS.items() if w == which)
     style = ""
     if any(n == "property_group" for n, _ in cols):
         maps = "".join(f"<map to='{c}'><bucket>&quot;{escape(g)}&quot;</bucket></map>" for g, c in GROUP_COLORS.items())
@@ -159,7 +178,7 @@ def inst(field, agg="none", kind=None, deriv=None, short=None):
 
 def worksheet(name, ds, cols_by_name, title, subtitle, rows, cols, mark, color=None, label=None,
               detail=(), extra_insts=(), sort=None, group_filter=True, caption=None, axis_titles=None,
-              tooltip_fields=(), axis_range=None):
+              tooltip_fields=(), axis_range=None, number_format=None, cull=True):
     """rows/cols: list of (field, agg, kind, deriv, short) tuples."""
     insts, deps = {}, set()
     def add(spec):
@@ -184,6 +203,7 @@ def worksheet(name, ds, cols_by_name, title, subtitle, rows, cols, mark, color=N
     if group_filter:
         gf_ref = add(("property_group", "none"))
     dep_cols = "\n".join("            " + col_decl(n, dt) for n, dt in cols_by_name if n in deps)
+    dep_cols += "\n" + "\n".join("            " + calc_decl(c) for c in CALC if c in deps)
     dep_insts = "\n".join("            " + x for x in insts.values())
     filt = ""
     if group_filter:
@@ -199,7 +219,7 @@ def worksheet(name, ds, cols_by_name, title, subtitle, rows, cols, mark, color=N
     label_style = ""
     if label:
         label_style = ("<style><style-rule element='mark'><format attr='mark-labels-show' value='true' />"
-                       "<format attr='mark-labels-cull' value='true' /></style-rule></style>")
+                       f"<format attr='mark-labels-cull' value='{'true' if cull else 'false'}' /></style-rule></style>")
     ax = ""
     if axis_titles:
         rules = "".join(f"<format attr='title' class='0' field='[{ds}].{inst(*spec)[0]}' scope='{scope}' value={quoteattr(txt)} />"
@@ -209,7 +229,12 @@ def worksheet(name, ds, cols_by_name, title, subtitle, rows, cols, mark, color=N
             spec, scope, lo, hi = axis_range
             rng = (f"<encoding attr='space' class='0' field='[{ds}].{inst(*spec)[0]}' field-type='quantitative' "
                    f"max='{hi}' min='{lo}' range-type='fixed' scope='{scope}' type='space' />")
-        ax = f"<style><style-rule element='axis'>{rng}{rules}</style-rule></style>"
+        cell = ""
+        if number_format:
+            spec, fmt = number_format
+            cell = (f"<style-rule element='cell'><format attr='text-format' field='[{ds}].{inst(*spec)[0]}' "
+                    f"value={quoteattr(fmt)} /></style-rule>")
+        ax = f"<style><style-rule element='axis'>{rng}{rules}</style-rule>{cell}</style>"
     else:
         ax = "<style />"
     sub = f"\n</run><run fontsize='10' fontcolor='#555555'>{escape(subtitle)}</run>" if subtitle else "</run>"
@@ -312,33 +337,167 @@ add_ws("Occupancy Trend", Q, Q_COLS,
 
 add_ws("NOI Growth Trend", Q, Q_COLS,
        "Shopping centers grew same-property NOI steadily; malls slowed in 2024-25",
-       "Average year-over-year same-property NOI growth by property type (net-lease REITs do not report it)",
+       "Average year-over-year same-property NOI growth. Net-lease REITs are not shown: they do not report same-property NOI.",
        rows=[("same_property_noi_growth_pct", "avg")], cols=[QUARTER], mark="Line", color=GROUP,
        axis_titles=[(("same_property_noi_growth_pct", "avg"), "rows", "Same-property NOI growth (%)"), (QUARTER, "cols", "Quarter")])
 
 add_ws("Valuation vs Growth", Q, Q_COLS,
-       "Faster-growing REITs tend to trade at higher prices per dollar of FFO",
-       "Each dot is one REIT: average same-property NOI growth vs. average price / annualized core FFO, 2023-2026",
-       rows=[("price_to_ffo", "avg")], cols=[("same_property_noi_growth_pct", "avg")], mark="Circle",
+       "Growth alone does not set the price: most REITs trade at 12-16x FFO, and malls are the cheapest",
+       "Each dot is one REIT: typical (median) FFO-per-share growth vs. a year earlier, and average price / annualized FFO, 2024-2026",
+       rows=[("price_to_ffo", "avg")], cols=[("ffo_growth_yoy_pct", "median", "qk", "Median", "med")], mark="Circle",
        color=GROUP, label=("ticker", "none"), detail=(("company", "none"),),
        axis_titles=[(("price_to_ffo", "avg"), "rows", "Price / FFO (x)"),
-                    (("same_property_noi_growth_pct", "avg"), "cols", "Avg same-property NOI growth (%)")])
+                    (("ffo_growth_yoy_pct", "median", "qk", "Median", "med"), "cols", "Median FFO per share growth, year over year (%)")])
 
 add_ws("Returns vs Rates", Q, Q_COLS,
-       "Big jumps in the 10-year Treasury usually meant down quarters for REIT stocks",
-       "Each dot is one property type in one quarter: change in the 10-year yield vs. average stock total return",
-       rows=[("total_return_q_pct", "avg")], cols=[("treasury_10y_change_bp", "avg")], mark="Circle",
-       color=GROUP, detail=(("quarter_label", "none"),),
-       axis_titles=[(("total_return_q_pct", "avg"), "rows", "Avg quarterly total return (%)"),
-                    (("treasury_10y_change_bp", "avg"), "cols", "Change in 10-yr Treasury yield (basis points)")])
+       "REIT returns drop when the 10-year Treasury rises, and net lease gets hit hardest",
+       "Average quarterly stock total return by property type, grouped by how much the 10-year Treasury yield moved "
+       "that quarter (2023-2026: 4 quarters fell 25+ bp, 6 were flat, 5 rose 25+ bp)",
+       rows=[("total_return_q_pct", "avg")], cols=[("rate_move", "none"), GROUP], mark="Bar",
+       color=GROUP, label=("total_return_q_pct", "avg"),
+       number_format=(("total_return_q_pct", "avg"), "n#,##0.0;-#,##0.0"),
+       axis_titles=[(("total_return_q_pct", "avg"), "rows", "Avg quarterly total return (%)")])
 
-add_ws("1-Year Return by REIT", P, P_COLS,
-       "Who won the last year?",
-       "1-year total return by REIT as of Nov 13, 2026 (scraped from Nareit's REIT directory)",
-       rows=[("ticker", "none")], cols=[("return_1yr_pct", "sum")], mark="Bar", color=GROUP,
-       label=("return_1yr_pct", "sum"), detail=(("company", "none"),),
-       sort=(("ticker", "none"), ("return_1yr_pct", "sum"), "DESC"),
-       axis_titles=[(("return_1yr_pct", "sum"), "cols", "1-year total return (%)")])
+RET_SHEET = "1-Year Return vs Treasury"
+
+
+def return_vs_treasury_sheet():
+    ds, name = P, RET_SHEET
+    R, T, X = "[sum:return_1yr_pct:qk]", "[sum:treasury_10y_1yr_ago:qk]", "[sum:excess_return_1yr_pct:qk]"
+    TK, GP, CO = "[none:ticker:nk]", "[none:property_group:nk]", "[none:company:nk]"
+    deps = "\n".join("            " + col_decl(n, dt) for n, dt in P_COLS
+                     if n in ("ticker", "company", "property_group", "return_1yr_pct", "treasury_10y_1yr_ago",
+                              "excess_return_1yr_pct"))
+    insts = "".join([
+        "<column-instance column='[ticker]' derivation='None' name='[none:ticker:nk]' pivot='key' type='nominal' />",
+        "<column-instance column='[company]' derivation='None' name='[none:company:nk]' pivot='key' type='nominal' />",
+        "<column-instance column='[property_group]' derivation='None' name='[none:property_group:nk]' pivot='key' type='nominal' />",
+        "<column-instance column='[return_1yr_pct]' derivation='Sum' name='[sum:return_1yr_pct:qk]' pivot='key' type='quantitative' />",
+        "<column-instance column='[treasury_10y_1yr_ago]' derivation='Sum' name='[sum:treasury_10y_1yr_ago:qk]' pivot='key' type='quantitative' />",
+        "<column-instance column='[excess_return_1yr_pct]' derivation='Sum' name='[sum:excess_return_1yr_pct:qk]' pivot='key' type='quantitative' />",
+    ])
+    q = lambda n: f"[{ds}].{n}"
+    fmt = "n#,##0.0;-#,##0.0"
+    xml = f"""    <worksheet name={quoteattr(name)}>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true' fontsize='14'>20 of 24 retail REITs beat a 10-year Treasury last year, but net-lease REITs barely did
+</run><run fontsize='10' fontcolor='#555555'>Bars: 1-year total return (as of Nov 13, 2026) with the 10-year Treasury yield from a year earlier inside (dark bar). Bottom line: return above the Treasury, in percentage points.</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='{ds}' />
+          </datasources>
+          <datasource-dependencies datasource='{ds}'>
+{deps}
+            {insts}
+          </datasource-dependencies>
+          <filter class='categorical' column='{q(GP)}'><groupfilter function='level-members' level='{GP}' user:ui-enumeration='all' user:ui-marker='enumerate' /></filter>
+          <shelf-sorts><shelf-sort-v2 dimension-to-sort='{q(TK)}' direction='DESC' is-on-innermost-dimension='true' measure-to-sort-by='{q(R)}' shelf='columns' /></shelf-sorts>
+          <slices><column>{q(GP)}</column></slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='{q(T)}' field-type='quantitative' fold='true' scope='rows' synchronized='true' type='space' />
+            <format attr='title' class='0' field='{q(R)}' scope='rows' value='1-year total return (%)' />
+            <format attr='title' class='0' field='{q(X)}' scope='rows' value='Above Treasury (pts)' />
+          </style-rule>
+          <style-rule element='cell'>
+            <format attr='text-format' field='{q(R)}' value='{fmt}' />
+            <format attr='text-format' field='{q(X)}' value='{fmt}' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane id='1' selection-relaxation-option='selection-relaxation-allow' y-axis-name='{q(R)}'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <color column='{q(GP)}' />
+              <text column='{q(R)}' />
+              <lod column='{q(CO)}' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='size' value='1.4' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='2' selection-relaxation-option='selection-relaxation-allow' y-axis-name='{q(T)}'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Bar' />
+            <encodings>
+              <lod column='{q(CO)}' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#2b2b2b' />
+                <format attr='size' value='0.35' />
+              </style-rule>
+            </style>
+          </pane>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow' y-axis-name='{q(X)}'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Line' />
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-color' value='#000000' />
+                <format attr='has-stroke' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>({q(R)} + {q(T)}) / {q(X)}</rows>
+        <cols>{q(TK)}</cols>
+      </table>
+      <simple-id uuid='{uid()}' />
+    </worksheet>"""
+    win = f"""    <window class='worksheet' name={quoteattr(name)}>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card mode='checkdropdown' param='{q(GP)}' type='filter' values='relevant' />
+            <card pane-specification-id='1' param='{q(GP)}' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{uid()}' />
+    </window>"""
+    SHEET_DS[name] = ds
+    WS.append(xml)
+    WIN.append(win)
+
+
+return_vs_treasury_sheet()
 
 add_ws("Debt Load by REIT", P, P_COLS,
        "Malls carry the most debt",
@@ -347,6 +506,16 @@ add_ws("Debt Load by REIT", P, P_COLS,
        detail=(("company", "none"),),
        sort=(("ticker", "none"), ("liabilities_to_assets", "sum"), "DESC"),
        axis_titles=[(("liabilities_to_assets", "sum"), "cols", "Liabilities / assets")])
+
+x_, w_ = worksheet("REITs by Property Type", P, P_COLS,
+                   "24 retail REITs, grouped by what they own",
+                   "Each block is one REIT: 12 shopping center, 8 net lease, 4 mall/outlet",
+                   rows=[GROUP], cols=[("reit_count", "sum")], mark="Bar", color=GROUP,
+                   label=("ticker", "none"), detail=(("ticker", "none"),), group_filter=False, cull=False,
+                   sort=(GROUP, ("reit_count", "sum"), "DESC"),
+                   axis_titles=[(("reit_count", "sum"), "cols", "Number of REITs")])
+WS.append(x_)
+WIN.append(w_)
 
 # ---------- text dashboards ----------
 ZID = [100]
@@ -357,15 +526,20 @@ def nid():
     return ZID[0]
 
 
-def text_dashboard(name, runs, w=1100, h=760):
+def text_dashboard(name, runs, w=1100, h=760, side_sheet=None):
     body = "".join(runs)
+    tw = 52000 if side_sheet else 90000
+    side = (f"<zone h='84000' id='{nid()}' name={quoteattr(side_sheet)} type-v2='visual' w='44000' x='55000' y='8000' />"
+            if side_sheet else "")
+    vps = (f"<viewpoints><viewpoint name={quoteattr(side_sheet)}><zoom type='entire-view' /></viewpoint></viewpoints>"
+           if side_sheet else "<viewpoints />")
     xml = f"""    <dashboard name={quoteattr(name)}>
       <style />
       <size maxheight='{h}' maxwidth='{w}' minheight='{h}' minwidth='{w}' sizing-mode='fixed' />
       <datasources />
       <zones>
         <zone h='100000' id='{nid()}' type-v2='layout-basic' w='100000' x='0' y='0'>
-          <zone h='90000' id='{nid()}' type-v2='text' w='90000' x='5000' y='5000'>
+          <zone h='90000' id='{nid()}' type-v2='text' w='{tw}' x='3000' y='5000'>
             <formatted-text>{body}</formatted-text>
             <zone-style>
               <format attr='border-color' value='#000000' />
@@ -374,12 +548,13 @@ def text_dashboard(name, runs, w=1100, h=760):
               <format attr='margin' value='12' />
             </zone-style>
           </zone>
+          {side}
         </zone>
       </zones>
       <simple-id uuid='{uid()}' />
     </dashboard>"""
     win = f"""    <window class='dashboard' name={quoteattr(name)}>
-      <viewpoints />
+      {vps}
       <active id='-1' />
       <simple-id uuid='{uid()}' />
     </window>"""
@@ -393,18 +568,18 @@ def r(text, size=14, bold=False, color="#333333"):
 
 NL = "<run>Æ&#10;</run>"
 title_runs = [
-    r("Retail REITs: Who Is Winning, and Does It Show Up in the Stock?", 26, True, "#1f3b57"), NL, NL,
+    r("Retail REITs: Who Is Winning, and Does It Show Up in the Stock?", 22, True, "#1f3b57"), NL, NL,
     r("ISA 401 Final Project  |  Fall 2026  |  Section A  |  " + TEAM, 15, True), NL,
     r("Tyler Draeger  &  Kenneth Kelly", 15), NL, NL,
     r("The question", 16, True, "#1f3b57"), NL,
     r("Among the 24 publicly traded U.S. retail REITs, are shopping center owners doing better than malls and "
       "net-lease REITs on occupancy and rent growth, and does that show up in stock returns and valuations, "
-      "or do interest rates matter more?", 14), NL, NL,
+      "or do interest rates matter more?", 13), NL, NL,
     r("Where the data comes from", 16, True, "#1f3b57"), NL,
-    r("- Nareit REIT directory (web scraping): the list of retail REITs, returns, dividend yields, headquarters", 13), NL,
-    r("- SEC EDGAR (API): revenue, net income, assets, and liabilities every quarter", 13), NL,
-    r("- 370 quarterly earnings press releases (LLM extraction): occupancy, same-property NOI growth, FFO", 13), NL,
-    r("- FRED (API): 10-year Treasury yield   |   Yahoo Finance (API): daily stock prices", 13), NL, NL,
+    r("- Nareit REIT directory (web scraping): list of REITs, returns, dividends", 12), NL,
+    r("- SEC EDGAR (API): revenue, net income, assets, liabilities", 12), NL,
+    r("- 370 earnings press releases (LLM extraction): occupancy, NOI growth, FFO", 12), NL,
+    r("- FRED (API): 10-year Treasury  |  Yahoo Finance (API): stock prices", 12), NL, NL,
     r("Use the Property Type filter on each page to focus on one group. Hover over any mark for details.", 12, False, "#666666"),
 ]
 take_runs = [
@@ -421,8 +596,8 @@ take_runs = [
       "a few of the newest quarters are not in the SEC data yet.", 12, False, "#666666"),
 ]
 DASH, DWIN = [], []
-for nm, runs in (("Title", title_runs), ("Takeaways", take_runs)):
-    x, w = text_dashboard(nm, runs)
+for nm, runs, side in (("Title", title_runs, "REITs by Property Type"), ("Takeaways", take_runs, None)):
+    x, w = text_dashboard(nm, runs, side_sheet=side)
     DASH.append(x)
     DWIN.append(w)
 
@@ -452,7 +627,7 @@ def chart_dashboard(sheet, w=1100, h=760):
     </dashboard>"""
     win = f"""    <window class='dashboard' name={quoteattr(dname)}>
       <viewpoints>
-        <viewpoint name={quoteattr(sheet)} />
+        <viewpoint name={quoteattr(sheet)}><zoom type='entire-view' /></viewpoint>
       </viewpoints>
       <active id='-1' />
       <simple-id uuid='{uid()}' />
@@ -472,9 +647,9 @@ points = [
     ("Title", "Retail REITs: the question"),
     ("Occupancy Trend", "Occupancy: net lease is full, centers are catching up"),
     ("NOI Growth Trend", "Growth: shopping centers lead"),
-    ("Valuation vs Growth", "Is growth rewarded?"),
-    ("Returns vs Rates", "Interest rates move the stocks"),
-    ("1-Year Return by REIT", "Last year's winners"),
+    ("Valuation vs Growth", "Growth vs. valuation"),
+    ("Returns vs Rates", "Rates up, REITs down"),
+    ("1-Year Return vs Treasury", "Last year: REITs vs. Treasuries"),
     ("Debt Load by REIT", "Who carries the most debt"),
     ("Takeaways", "Takeaways"),
 ]

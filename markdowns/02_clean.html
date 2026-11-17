@@ -702,7 +702,9 @@ focus_by_reit = llm_clean |&gt;
 # A simpler three-way grouping for the dashboard
 focus_by_reit = focus_by_reit |&gt;
   mutate(property_group = case_when(
-    property_type %in% c(&quot;grocery_anchored_center&quot;, &quot;open_air_center&quot;) ~ &quot;Shopping centers&quot;,
+    # CTO is labeled &quot;mixed&quot; (it also owns some office), but most of its portfolio is open-air
+    # shopping centers, so we group it with the shopping center REITs
+    property_type %in% c(&quot;grocery_anchored_center&quot;, &quot;open_air_center&quot;, &quot;mixed&quot;) ~ &quot;Shopping centers&quot;,
     property_type == &quot;mall_outlet&quot; ~ &quot;Malls &amp; outlets&quot;,
     property_type == &quot;net_lease&quot;   ~ &quot;Net lease&quot;,
     TRUE ~ &quot;Mixed&quot;))
@@ -715,7 +717,7 @@ focus_by_reit</code></pre>
 ##  3 BFS    grocery_anchored_center Shopping centers
 ##  4 BRX    grocery_anchored_center Shopping centers
 ##  5 CBL    mall_outlet             Malls &amp; outlets 
-##  6 CTO    mixed                   Mixed           
+##  6 CTO    mixed                   Shopping centers
 ##  7 CURB   open_air_center         Shopping centers
 ##  8 EPRT   net_lease               Net lease       
 ##  9 FCPT   net_lease               Net lease       
