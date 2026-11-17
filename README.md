@@ -14,7 +14,7 @@ ISA 401 Final Project, Fall 2026, Team 15, Section A
 
 | Member | What I built | Portfolio project entry |
 |---|---|---|
-| Tyler Draeger | Data collection and cleaning in R (web scraping, APIs, LLM extraction) and the Tableau dashboard | [https://USERNAME.github.io/portfolio/#...] |
+| Tyler Draeger | Data collection and cleaning in R (web scraping, APIs, LLM extraction) and the Tableau dashboard | https://tylerdraeger.github.io/portfolio/#retail-reits |
 | Kenneth Kelly | Checking the data and results, and the presentations | [ ] |
 
 Each member adds this project to their own portfolio site, in their own words, with a link
