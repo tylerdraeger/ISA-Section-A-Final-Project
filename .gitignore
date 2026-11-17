@@ -12,3 +12,6 @@
 *_files/
 .DS_Store
 Thumbs.db
+
+# Tableau temp/lock files
+~*.twbr
