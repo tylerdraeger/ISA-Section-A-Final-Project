@@ -1,0 +1,19 @@
+rule,ticker,quarter,column,value
+11 quarterly return out of range,CBL,2026 Q2,total_return_q_pct,40.5
+11 quarterly return out of range,MAC,2023 Q4,total_return_q_pct,43.7
+3 missing SEC revenue,FRT,2026 Q2,revenue_mm,NA
+3 missing SEC revenue,FRT,2026 Q3,revenue_mm,NA
+3 missing SEC revenue,KIM,2026 Q3,revenue_mm,NA
+3 missing SEC revenue,NNN,2026 Q1,revenue_mm,NA
+3 missing SEC revenue,REG,2026 Q2,revenue_mm,NA
+3 missing SEC revenue,REG,2026 Q3,revenue_mm,NA
+3 missing SEC revenue,UE,2026 Q2,revenue_mm,NA
+3 missing SEC revenue,UE,2026 Q3,revenue_mm,NA
+4 missing press release,AKR,2023 Q1,filing_date,NA
+4 missing press release,AKR,2025 Q2,filing_date,NA
+4 missing press release,CBL,2023 Q1,filing_date,NA
+4 missing press release,CURB,2024 Q3,filing_date,NA
+4 missing press release,GTY,2023 Q1,filing_date,NA
+4 missing press release,KIM,2024 Q3,filing_date,NA
+4 missing press release,NNN,2023 Q1,filing_date,NA
+4 missing press release,REG,2023 Q1,filing_date,NA

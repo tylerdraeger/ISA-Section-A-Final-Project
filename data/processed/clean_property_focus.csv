@@ -1,0 +1,25 @@
+ticker,property_type,property_group
+ADC,net_lease,Net lease
+AKR,open_air_center,Shopping centers
+BFS,grocery_anchored_center,Shopping centers
+BRX,grocery_anchored_center,Shopping centers
+CBL,mall_outlet,Malls & outlets
+CTO,mixed,Mixed
+CURB,open_air_center,Shopping centers
+EPRT,net_lease,Net lease
+FCPT,net_lease,Net lease
+FRT,open_air_center,Shopping centers
+GTY,net_lease,Net lease
+IVT,grocery_anchored_center,Shopping centers
+KIM,grocery_anchored_center,Shopping centers
+KRG,grocery_anchored_center,Shopping centers
+MAC,mall_outlet,Malls & outlets
+NNN,net_lease,Net lease
+NTST,net_lease,Net lease
+O,net_lease,Net lease
+PECO,grocery_anchored_center,Shopping centers
+PINE,net_lease,Net lease
+REG,grocery_anchored_center,Shopping centers
+SKT,mall_outlet,Malls & outlets
+SPG,mall_outlet,Malls & outlets
+UE,grocery_anchored_center,Shopping centers

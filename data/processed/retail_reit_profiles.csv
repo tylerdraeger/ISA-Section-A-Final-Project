@@ -1,0 +1,25 @@
+ticker,company,property_group,property_type,hq_city,hq_state,hq_zip,exchange,latest_quarter,occupancy_pct,same_property_noi_growth_pct,total_assets_mm,liabilities_to_assets,price_to_ffo,dividend_yield_pct,return_1yr_pct,return_3yr_cagr_pct,return_5yr_cagr_pct
+ADC,Agree Realty Corporation,Net lease,net_lease,Royal Oak,Michigan,32301,NYSE,2026 Q3,99.8,NA,10950.922,0.366024888132707,NA,4.6899999999999995,NA,NA,NA
+AKR,Acadia Realty Trust,Shopping centers,open_air_center,Rye,New York,10580,NYSE,2026 Q3,95.5,10.2,4829.735,0.4450351830897554,15.616666475931805,3.96,NA,NA,NA
+BFS,"Saul Centers, Inc.",Shopping centers,grocery_anchored_center,Bethesda,Maryland,20814,NYSE,2026 Q3,NA,5,2172.468,0.7850656488380957,10.444444417953491,8.32,NA,NA,NA
+BRX,Brixmor Property Group Inc.,Shopping centers,grocery_anchored_center,New York,New York,10017,NYSE,2026 Q3,95.6,6.6,9022.841,0.6618905287148471,11.50000015894572,4.06,NA,NA,NA
+CBL,CBL Properties,Malls & outlets,mall_outlet,Chattanooga,Tennessee,37421,NYSE,2026 Q3,91.5,3.8,2660.818,0.8429847513058014,12.704762050083705,4.58,NA,NA,NA
+CTO,"CTO Realty Growth, Inc.",Mixed,mixed,Winter Park,Florida,32789,NYSE,2026 Q3,92.4,3.8,1495.336,0.5443626047925015,NA,7.48,NA,NA,NA
+CURB,Curbline Properties,Shopping centers,open_air_center,New York,New York,10022,NYSE,2026 Q3,96.4,3.4,3033.182,0.2505583245581703,NA,2.3299999999999996,NA,NA,NA
+EPRT,"Essential Properties Realty Trust, Inc.",Net lease,net_lease,Princeton,New Jersey,08540,NYSE,2026 Q3,99.6,NA,7689.551,0.4038372331492437,11.949073826825176,4.609999999999999,NA,NA,NA
+FCPT,Four Corners Property Trust,Net lease,net_lease,Mill Valley,California,94941,NYSE,2026 Q3,99.5,NA,3302.778,0.5060927498003196,12.65116292376851,4.34,NA,NA,NA
+FRT,Federal Realty Investment Trust,Shopping centers,open_air_center,North Bethesda,Maryland,20852,NYSE,2026 Q3,93.8,2.5,NA,NA,14.477272849669431,4.109999999999999,NA,NA,NA
+GTY,Getty Realty Corp.,Net lease,net_lease,New York,New York,10017,NYSE,2026 Q3,NA,NA,2572.148,0.5031926623195866,11.573770397999247,6.7700000000000005,NA,NA,NA
+IVT,InvenTrust Properties Corp.,Shopping centers,grocery_anchored_center,Downers Grove,Illinois,60515,NYSE,2026 Q3,96.4,3.1,3009.38,0.40868218702855735,14.221697933268997,3.17,NA,NA,NA
+KIM,Kimco Realty Corporation,Shopping centers,grocery_anchored_center,Jericho,New York,11753,NYSE,2026 Q3,96.6,4.9,NA,NA,11.813829300251413,4.38,NA,NA,NA
+KRG,Kite Realty Group Trust,Shopping centers,grocery_anchored_center,Indianapolis,Indiana,46204,NYSE,2026 Q3,95.3,3.6,6028.177,0.5234547691615558,11.504716693230396,4.54,NA,NA,NA
+MAC,Macerich,Malls & outlets,mall_outlet,Santa Monica,California,90401,NYSE,2026 Q3,94.9,4.7,8765.638,0.6805545700153257,NA,2.71,NA,NA,NA
+NNN,"NNN REIT, Inc.",Net lease,net_lease,Orlando,Florida,32801,NYSE,2026 Q3,99.2,NA,9718.877,0.531696408957537,11.413888931274414,6.02,NA,NA,NA
+NTST,NETSTREIT,Net lease,net_lease,Dallas,Texas,75201,NYSE,2026 Q3,99.9,NA,3279.742,0.3875124933607582,12.62857164655413,4.859999999999999,NA,NA,NA
+O,Realty Income Corporation,Net lease,net_lease,San Diego,California,11995,NYSE,2026 Q3,98.8,NA,77950.414,0.4525443315798169,12.34090891751376,5.54,NA,NA,NA
+PECO,Phillips Edison & Co.,Shopping centers,grocery_anchored_center,Cincinnati,Ohio,11501,NASDAQ,2026 Q3,97.5,5.3,5551.054,0.5137330676300392,13.528985562531846,3.3499999999999996,NA,NA,NA
+PINE,Alpine Income Property Trust,Net lease,net_lease,Winter Park,Florida,32789,NYSE,2026 Q3,99.6,NA,821.106,0.5507790711552467,7.886363809758966,7.619999999999999,NA,NA,NA
+REG,Regency Centers Corporation,Shopping centers,grocery_anchored_center,Jacksonville,Florida,32202,NASDAQ,2026 Q3,97,5.1,NA,NA,14.609755539312596,3.97,NA,NA,NA
+SKT,Tanger Inc.,Malls & outlets,mall_outlet,Greensboro,North Carolina,27408,NYSE,2026 Q3,97.3,4.2,2669.836,0.7337960084439643,13.398437201976776,3.16,NA,NA,NA
+SPG,"Simon Property Group, Inc.",Malls & outlets,mall_outlet,Indianapolis,Indiana,46204,NYSE,2026 Q3,96.5,6.7,39075.13,0.8615802685749222,16.24271800217119,3.86,NA,NA,NA
+UE,Urban Edge Properties,Shopping centers,grocery_anchored_center,New York,New York,10017,NYSE,2026 Q3,96.4,4.5,NA,NA,12.84868466226678,4.03,NA,NA,NA

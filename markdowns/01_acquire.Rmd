@@ -10,18 +10,439 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
-## Source 1: [name] ([web scraping / API / LLM extraction])
+This file pulls every raw source and saves it to `../data/raw/`. Nothing gets cleaned
+here except what is needed to make the next request (for example, pulling the ticker
+out of the scraped text so we can look it up at the SEC).
 
-What one row is: [ ]
+## Settings and packages
 
-## Source 2: [name]
+```{r settings}
+START_YEAR = 2023     # first year of quarterly data we want
+REFRESH    = FALSE    # FALSE = reuse files already saved in data/raw (saves time and API money)
 
-What one row is: [ ]
+raw_dir = "../data/raw"
+pr_dir  = file.path(raw_dir, "press_releases")
+dir.create(pr_dir, recursive = TRUE, showWarnings = FALSE)
 
-## Source 3: [name]
+pkgs = c("rvest", "httr2", "jsonlite", "dplyr", "tidyr", "purrr", "stringr",
+         "readr", "lubridate", "ggplot2", "ellmer", "knitr")
+missing_pkgs = pkgs[!pkgs %in% rownames(installed.packages())]
+if (length(missing_pkgs) > 0) install.packages(missing_pkgs)
 
-What one row is: [ ]
+library(dplyr)   # only package we attach, everything else uses pkg::function()
+```
+
+API keys live in `.Renviron` in the project folder (that file is in `.gitignore`). We need three:
+
+- `SEC_USER_AGENT` - the SEC asks every script to say who it is, e.g. `Your Name your_email@miamioh.edu`
+- `FRED_API_KEY`
+- `OPENAI_API_KEY`
+
+```{r keys}
+# Knitting runs from the markdowns/ folder, so R does not find .Renviron in the project
+# folder on its own. Load it directly.
+if (file.exists("../.Renviron")) readRenviron("../.Renviron")
+
+needed = c("SEC_USER_AGENT", "FRED_API_KEY", "OPENAI_API_KEY")
+have   = Sys.getenv(needed) != ""
+if (!all(have)) stop("Add these to .Renviron and restart R: ", paste(needed[!have], collapse = ", "))
+```
+
+## Source 1: Nareit REIT Directory (web scraping)
+
+[Nareit's REIT directory](https://www.reit.com/investing/reit-directory) lists every REIT
+with its property sector. We filter it to **Retail**, **Public (listed)**, **United States**
+using the same query string the site's own filter form builds (`sector=642&status=309&country=2`).
+The list is split across pages (`&page=0`, `&page=1`, ...), so we loop until a page comes back empty.
+
+What one row is (list): one retail REIT as shown in the directory table.
+
+```{r nareit-list}
+base_url = "https://www.reit.com"
+list_url = paste0(base_url, "/investing/reit-directory?company=&sector=642&status=309&country=2&page=")
+
+scrape_list_page = function(p) {
+  Sys.sleep(1)  # be polite to the site
+  pg   = rvest::read_html(paste0(list_url, p))
+  rows = pg |> rvest::html_elements("table.views-table tbody tr")
+  if (length(rows) == 0) return(NULL)
+  tibble(
+    company         = rows |> rvest::html_element("td.views-field-title a") |> rvest::html_text2(),
+    detail_path     = rows |> rvest::html_element("td.views-field-title a") |> rvest::html_attr("href"),
+    ticker_line     = rows |> rvest::html_element(".ticker-symbol") |> rvest::html_text2(),
+    return_1yr_text = rows |> rvest::html_element("td.views-field-field-stock-yearly-return") |> rvest::html_text2(),
+    price_text      = rows |> rvest::html_element("td.views-field-field-stock-price") |> rvest::html_text2(),
+    as_of           = rows |> rvest::html_element("time") |> rvest::html_attr("datetime"),
+    list_page       = p
+  )
+}
+
+list_file = file.path(raw_dir, "nareit_list_raw.csv")
+if (REFRESH || !file.exists(list_file)) {
+  pages = list()
+  for (p in 0:20) {               # 20 is just a safety cap; it stops at the first empty page
+    one = scrape_list_page(p)
+    if (is.null(one)) break
+    pages[[length(pages) + 1]] = one
+  }
+  nareit_list = bind_rows(pages)
+  readr::write_csv(nareit_list, list_file)
+}
+nareit_list = readr::read_csv(list_file, show_col_types = FALSE)
+nrow(nareit_list)
+head(nareit_list)
+```
+
+Each REIT also has its own profile page with returns over several horizons, dividend
+yield, exchange, and headquarters address. We visit every profile page and keep every
+labeled field in long format (one row = one field on one REIT's page). It gets reshaped in `02_clean`.
+
+```{r nareit-detail}
+scrape_detail = function(path) {
+  Sys.sleep(1)
+  pg = rvest::read_html(paste0(base_url, path))
+  above  = pg |> rvest::html_elements("div.field.field--label-above")
+  inline = pg |> rvest::html_elements("div.field.element-label-inline")
+  bind_rows(
+    tibble(label = above  |> rvest::html_element(".field__label") |> rvest::html_text2(),
+           value = above  |> rvest::html_element(".field__item")  |> rvest::html_text2()),
+    tibble(label = inline |> rvest::html_element(".field-label")  |> rvest::html_text2(),
+           value = inline |> rvest::html_element(".field-item")   |> rvest::html_text2())
+  ) |>
+    mutate(detail_path = path)
+}
+
+detail_file = file.path(raw_dir, "nareit_detail_raw.csv")
+if (REFRESH || !file.exists(detail_file)) {
+  nareit_detail = purrr::map_dfr(nareit_list$detail_path, scrape_detail)
+  readr::write_csv(nareit_detail, detail_file)
+}
+nareit_detail = readr::read_csv(detail_file, show_col_types = FALSE)
+nareit_detail |> count(label, sort = TRUE)
+```
+
+The ticker is the first piece of text like `KIM | Jericho, New York | Retail`. We need it now to match each REIT to the SEC and Yahoo Finance.
+
+```{r tickers}
+reit_tickers = nareit_list |>
+  mutate(ticker = stringr::str_trim(stringr::str_extract(ticker_line, "^[^|]+"))) |>
+  distinct(ticker) |>
+  pull(ticker)
+reit_tickers
+```
+
+## Source 2: SEC EDGAR (API)
+
+The SEC has free JSON APIs. Every request has to send a User-Agent (from `.Renviron`) and
+the SEC asks for no more than 10 requests per second, so we throttle to 5.
+
+```{r sec-helper}
+sec_get = function(url) {
+  httr2::request(url) |>
+    httr2::req_user_agent(Sys.getenv("SEC_USER_AGENT")) |>
+    httr2::req_throttle(rate = 5) |>
+    # the SEC sometimes answers "busy" (503) or "slow down" (429/403); wait and try again
+    httr2::req_retry(max_tries = 5,
+                     is_transient = \(resp) httr2::resp_status(resp) %in% c(403, 429, 500, 502, 503),
+                     backoff = \(i) 2^i) |>
+    httr2::req_perform()
+}
+```
+
+### 2a. Ticker to CIK lookup
+
+The SEC identifies companies by CIK number, not ticker. `company_tickers.json` maps one to the other.
+What one row is: one ticker listed with the SEC.
+
+```{r sec-tickers}
+tick_file = file.path(raw_dir, "sec_company_tickers.csv")
+if (REFRESH || !file.exists(tick_file)) {
+  sec_tickers = sec_get("https://www.sec.gov/files/company_tickers.json") |>
+    httr2::resp_body_string() |>
+    jsonlite::fromJSON() |>
+    bind_rows()
+  readr::write_csv(sec_tickers, tick_file)
+}
+sec_tickers = readr::read_csv(tick_file, show_col_types = FALSE)
+
+reits = tibble(ticker = reit_tickers) |>
+  left_join(sec_tickers, by = "ticker")
+
+reits |> filter(is.na(cik_str))   # any ticker the SEC does not know (should be none)
+reits = reits |> filter(!is.na(cik_str))
+```
+
+### 2b. XBRL financial statement facts
+
+`companyfacts` returns every number the company has tagged in its 10-Q and 10-K filings.
+We keep a few tags. REITs do not all use the same tag for the same thing (for example
+Brixmor reports rental income but not `Revenues`), so we pull backups and pick one in `02_clean`.
+What one row is: one reported value for one tag for one period from one filing.
+
+```{r sec-facts}
+fact_tags = c("Revenues", "OperatingLeaseLeaseIncome",
+              "NetIncomeLoss", "NetIncomeLossAvailableToCommonStockholdersBasic", "ProfitLoss",
+              "Assets", "Liabilities")
+
+get_facts = function(cik, ticker) {
+  j = sec_get(sprintf("https://data.sec.gov/api/xbrl/companyfacts/CIK%010d.json", as.integer(cik))) |>
+    httr2::resp_body_string() |>
+    jsonlite::fromJSON()
+  gaap = j$facts$`us-gaap`
+  purrr::map_dfr(intersect(fact_tags, names(gaap)), function(tg) {
+    u  = gaap[[tg]]$units
+    df = u[[1]]
+    df$tag  = tg
+    df$unit = names(u)[1]
+    df
+  }) |>
+    mutate(ticker = ticker, cik = cik)
+}
+
+facts_file = file.path(raw_dir, "sec_companyfacts_raw.csv")
+if (REFRESH || !file.exists(facts_file)) {
+  sec_facts = purrr::map2_dfr(reits$cik_str, reits$ticker, get_facts) |>
+    filter(fy >= START_YEAR - 1)
+  readr::write_csv(sec_facts, facts_file)
+}
+sec_facts = readr::read_csv(facts_file, show_col_types = FALSE)
+sec_facts |> count(ticker, tag) |> tidyr::pivot_wider(names_from = tag, values_from = n)
+```
+
+### 2c. Earnings press releases (8-K, Item 2.02)
+
+Every quarter each REIT files an 8-K under Item 2.02 ("Results of Operations") with the
+earnings press release attached as Exhibit 99.1. The press release has the numbers investors
+actually care about (occupancy, same-property NOI growth, FFO) that are **not** in the XBRL data.
+
+1. `submissions` API: list the company's filings and keep 8-Ks with item 2.02.
+2. Filing index page: find the document whose type is `EX-99.1`.
+3. Download it and save it as plain text. These text files are the unstructured input for Source 3.
+
+```{r sec-8k-list}
+get_8k_list = function(cik, ticker) {
+  j = sec_get(sprintf("https://data.sec.gov/submissions/CIK%010d.json", as.integer(cik))) |>
+    httr2::resp_body_string() |>
+    jsonlite::fromJSON()
+  r = as_tibble(j$filings$recent)
+  if (min(r$filingDate) > paste0(START_YEAR, "-01-01")) {
+    warning(ticker, ": recent filings list does not reach back to ", START_YEAR)
+  }
+  r |>
+    filter(form == "8-K",
+           stringr::str_detect(items, "2\\.02"),
+           filingDate >= paste0(START_YEAR, "-01-15")) |>   # Q4 of the prior year is reported in Jan/Feb
+    select(accessionNumber, filingDate, reportDate, items, primaryDocument) |>
+    mutate(ticker = ticker, cik = cik)
+}
+
+find_ex99 = function(cik, accession) {
+  acc = stringr::str_remove_all(accession, "-")
+  idx = sprintf("https://www.sec.gov/Archives/edgar/data/%d/%s/%s-index.html",
+                as.integer(cik), acc, accession)
+  rows = sec_get(idx) |> httr2::resp_body_string() |> rvest::read_html() |>
+    rvest::html_elements("table.tableFile tr")
+  docs = tibble(
+    type = rows |> rvest::html_element("td:nth-child(4)") |> rvest::html_text2(),
+    href = rows |> rvest::html_element("td:nth-child(3) a") |> rvest::html_attr("href")
+  ) |>
+    filter(type == "EX-99.1")
+  if (nrow(docs) == 0) return(NA_character_)
+  paste0("https://www.sec.gov", stringr::str_remove(docs$href[1], "^/ix\\?doc="))
+}
+
+# If one filing page fails, record the error and keep going instead of stopping the knit.
+safe_find_ex99 = function(cik, accession) {
+  tryCatch(find_ex99(cik, accession),
+           error = function(e) {
+             message("Could not read filing ", accession, ": ", conditionMessage(e))
+             "ERROR"
+           })
+}
+
+pr_index_file = file.path(raw_dir, "press_release_index.csv")
+if (REFRESH || !file.exists(pr_index_file)) {
+  filings = purrr::map2_dfr(reits$cik_str, reits$ticker, get_8k_list)
+  filings$ex99_url = "ERROR"
+  filings$file = file.path(pr_dir, paste0(filings$ticker, "_", filings$accessionNumber, ".txt"))
+  readr::write_csv(filings, pr_index_file)
+}
+pr_index = readr::read_csv(pr_index_file, show_col_types = FALSE, col_types = readr::cols(.default = "c"))
+
+# look up (or re-try) every filing whose Exhibit 99.1 link we do not have yet,
+# saving progress every 25 filings so a failure part way through is not lost
+retry = which(pr_index$ex99_url %in% "ERROR")
+for (k in split(retry, ceiling(seq_along(retry) / 25))) {
+  pr_index$ex99_url[k] = purrr::map2_chr(pr_index$cik[k], pr_index$accessionNumber[k], safe_find_ex99)
+  readr::write_csv(pr_index, pr_index_file)
+}
+pr_index = pr_index |> mutate(ex99_url = na_if(ex99_url, "NA"))
+pr_index |> count(ticker)
+pr_index |> filter(is.na(ex99_url))          # 8-Ks with no Exhibit 99.1
+pr_index |> filter(ex99_url %in% "ERROR")   # filing pages that failed; knit again to retry them
+```
+
+```{r sec-8k-download}
+to_get = pr_index |> filter(!is.na(ex99_url), ex99_url != "ERROR", REFRESH | !file.exists(file))
+for (i in seq_len(nrow(to_get))) {
+  txt = tryCatch(
+    sec_get(to_get$ex99_url[i]) |>
+      httr2::resp_body_raw() |>      # raw bytes: older SEC files are not always UTF-8
+      rvest::read_html() |>
+      rvest::html_text2(),
+    error = function(e) { message("Download failed: ", to_get$ex99_url[i]); NULL })
+  if (!is.null(txt)) writeLines(txt, to_get$file[i], useBytes = TRUE)
+}
+length(list.files(pr_dir, pattern = "\\.txt$"))
+```
+
+## Source 3: Press release metrics (LLM structured extraction)
+
+Each press release is several pages of text and tables, and every REIT words things a bit
+differently ("leased occupancy", "same center NOI", "Nareit FFO"). We send the first 15,000
+characters of each one (the headline section where these numbers live) to `gpt-5.6-luna`
+through `ellmer` and ask for the same fields back every time.
+
+What one row is: one earnings press release (one REIT, one quarter).
+
+```{r llm-schema}
+pr_type = ellmer::type_object(
+  period_year    = ellmer::type_integer("Calendar year of the quarter whose results are reported, e.g. 2026"),
+  period_quarter = ellmer::type_integer("Quarter (1-4) whose results are reported. A fourth-quarter / full-year release is 4"),
+  property_focus = ellmer::type_enum(
+    values = c("grocery_anchored_center", "open_air_center", "mall_outlet", "net_lease", "mixed"),
+    description = "Main property type the company owns, based on how it describes itself"),
+  occupancy_pct = ellmer::type_number(
+    "Headline total portfolio occupancy or leased rate for the quarter in percent, e.g. 96.6. Use the total (or pro-rata) portfolio number, not small-shop or anchor only. Leave empty if not stated", required = FALSE),
+  same_property_noi_growth_pct = ellmer::type_number(
+    "Year-over-year same property / same center / comparable NOI growth for the quarter in percent, e.g. 4.9 (negative if it fell). Quarter, not year-to-date. Leave empty if not stated", required = FALSE),
+  ffo_per_share = ellmer::type_number(
+    "Nareit-defined FFO per diluted share for the quarter in dollars (not Core, Normalized, or AFFO). Leave empty if not stated", required = FALSE),
+  core_ffo_per_share = ellmer::type_number(
+    "Core FFO, Normalized FFO, Operating FFO, or AFFO per diluted share for the quarter in dollars, if reported", required = FALSE),
+  rent_spread_pct = ellmer::type_number(
+    "Blended (all comparable leases) cash rent spread or rent recapture rate change for the quarter, in percent. For a recapture rate of 103.5% report 3.5. Leave empty if not stated", required = FALSE),
+  guidance_change = ellmer::type_enum(
+    values = c("raised", "maintained", "lowered", "initiated", "not_mentioned"),
+    description = "What the release says about full-year guidance / outlook compared with the last update"),
+  net_debt_to_ebitda = ellmer::type_number(
+    "Net debt to EBITDA (or EBITDAre) ratio, e.g. 5.4. Leave empty if not stated", required = FALSE)
+)
+```
+
+The extraction runs in batches of 25 and appends to a CSV as it goes, so if a call fails
+or you stop halfway, the next knit only sends the press releases that are not done yet.
+
+```{r llm-extract}
+llm_file = file.path(raw_dir, "llm_press_release_extract.csv")
+done = if (file.exists(llm_file) && !REFRESH) readr::read_csv(llm_file, show_col_types = FALSE)$file else character(0)
+
+todo = pr_index |>
+  filter(file.exists(file), !file %in% done)
+
+chat = ellmer::chat_openai(
+  model  = "gpt-5.6-luna",
+  params = ellmer::params(reasoning_effort = "none"),
+  system_prompt = paste(
+    "You read quarterly earnings press releases from U.S. retail REITs and pull out numbers.",
+    "Only report a number if it is written in the text. Never calculate or guess a value.",
+    "Percentages are plain numbers (96.6 not 0.966).")
+)
+
+batches = split(seq_len(nrow(todo)), ceiling(seq_len(nrow(todo)) / 25))
+for (b in batches) {
+  prompts = purrr::map(b, function(i) {
+    txt = paste(readLines(todo$file[i], warn = FALSE), collapse = "\n")
+    paste0("Company ticker: ", todo$ticker[i], "\nFiled: ", todo$filingDate[i], "\n\n",
+           substr(txt, 1, 15000))
+  })
+  res = tryCatch(
+    ellmer::parallel_chat_structured(chat, prompts, type = pr_type),
+    error = function(e) { message("Batch failed: ", conditionMessage(e)); NULL }
+  )
+  if (is.null(res)) next
+  res$file = todo$file[b]
+  readr::write_csv(res, llm_file, append = file.exists(llm_file))
+}
+
+llm_raw = readr::read_csv(llm_file, show_col_types = FALSE)
+nrow(llm_raw)
+head(llm_raw)
+```
+
+## Source 4: FRED 10-year Treasury yield (API)
+
+REITs are often treated as "bond proxies", so the 10-year Treasury yield (`DGS10`) is the
+rate we compare against. What one row is: one trading day.
+
+```{r fred}
+fred_file = file.path(raw_dir, "fred_dgs10_raw.csv")
+if (REFRESH || !file.exists(fred_file)) {
+  fred = httr2::request("https://api.stlouisfed.org/fred/series/observations") |>
+    httr2::req_url_query(
+      series_id         = "DGS10",
+      api_key           = Sys.getenv("FRED_API_KEY"),
+      file_type         = "json",
+      observation_start = paste0(START_YEAR - 1, "-10-01")
+    ) |>
+    httr2::req_perform() |>
+    httr2::resp_body_string() |>
+    jsonlite::fromJSON()
+  readr::write_csv(fred$observations |> select(date, value), fred_file)
+}
+dgs10_raw = readr::read_csv(fred_file, show_col_types = FALSE, col_types = "cc")
+tail(dgs10_raw)
+```
+
+## Source 5: Daily stock prices (Yahoo Finance chart API)
+
+We call Yahoo Finance's chart API directly with `httr2` (the same data `tidyquant` uses, but
+calling it ourselves is more reliable). `adjusted` is the closing price adjusted for dividends
+and splits, so the change in it is close to a total return. What one row is: one ticker on one trading day.
+
+```{r prices}
+to_num = function(x) vapply(x, function(v) if (is.null(v)) NA_real_ else as.numeric(v), numeric(1))  # null -> NA
+
+get_prices = function(tk) {
+  Sys.sleep(0.5)
+  j = httr2::request(paste0("https://query1.finance.yahoo.com/v8/finance/chart/", tk)) |>
+    httr2::req_url_query(
+      period1  = as.integer(as.POSIXct(paste0(START_YEAR - 1, "-12-01"), tz = "UTC")),
+      period2  = as.integer(Sys.time()),
+      interval = "1d"
+    ) |>
+    httr2::req_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64)") |>   # Yahoo blocks requests with no browser name
+    httr2::req_retry(max_tries = 3) |>
+    httr2::req_perform() |>
+    httr2::resp_body_string() |>
+    jsonlite::fromJSON(simplifyVector = FALSE)
+  r = j$chart$result[[1]]
+  q = r$indicators$quote[[1]]
+  tibble(symbol   = tk,
+         date     = as.Date(as.POSIXct(to_num(r$timestamp), origin = "1970-01-01", tz = "America/New_York")),
+         open     = to_num(q$open),  high = to_num(q$high), low = to_num(q$low),
+         close    = to_num(q$close), volume = to_num(q$volume),
+         adjusted = to_num(r$indicators$adjclose[[1]]$adjclose))
+}
+
+safe_get_prices = function(tk) {
+  tryCatch(get_prices(tk), error = function(e) { message("Prices failed for ", tk, ": ", conditionMessage(e)); NULL })
+}
+
+price_file = file.path(raw_dir, "yahoo_prices_raw.csv")
+if (REFRESH || !file.exists(price_file)) {
+  prices = purrr::map_dfr(reits$ticker, safe_get_prices)
+  readr::write_csv(prices, price_file)
+}
+prices_raw = readr::read_csv(price_file, show_col_types = FALSE)
+setdiff(reits$ticker, prices_raw$symbol)   # tickers with no prices (should be empty)
+prices_raw |> group_by(symbol) |> summarise(first = min(date), last = max(date), n = n())
+```
 
 ## Save the raw data
 
-Write each source to `../data/raw/`.
+Everything above is already written to `../data/raw/`:
+
+```{r raw-files}
+list.files(raw_dir)
+```

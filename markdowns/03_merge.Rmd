@@ -10,16 +10,130 @@ output:
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
+```{r settings}
+START_YEAR = 2023
+proc_dir = "../data/processed"
+library(dplyr)
+
+nareit  = readr::read_csv(file.path(proc_dir, "clean_nareit_reits.csv"), col_types = readr::cols(hq_zip = "c"))
+sec     = readr::read_csv(file.path(proc_dir, "clean_sec_quarterly.csv"), show_col_types = FALSE)
+pr      = readr::read_csv(file.path(proc_dir, "clean_press_release_metrics.csv"), show_col_types = FALSE)
+focus   = readr::read_csv(file.path(proc_dir, "clean_property_focus.csv"), show_col_types = FALSE)
+tsy     = readr::read_csv(file.path(proc_dir, "clean_treasury_quarterly.csv"), show_col_types = FALSE)
+prices  = readr::read_csv(file.path(proc_dir, "clean_prices_quarterly.csv"), show_col_types = FALSE)
+```
+
 ## Keys
 
-Which columns link the sources, and how you made them match.
+| Table | Key | How it was made to match |
+|---|---|---|
+| Nareit directory | `ticker` | split out of the `KIM \| Jericho, New York \| Retail` text and trimmed |
+| SEC XBRL facts | `ticker`, `year`, `quarter` | ticker matched to CIK with the SEC ticker file; year and quarter read from the SEC `frame` |
+| Press release metrics | `ticker`, `year`, `quarter` | quarter worked out from the filing date |
+| Stock prices | `ticker`, `year`, `quarter` | Yahoo symbol is the same as the ticker; last trading day of each quarter |
+| 10-year Treasury | `year`, `quarter` | quarterly average and quarter-end value |
+
+All tickers are upper case with no spaces in every table:
+
+```{r key-check}
+key_sets = list(nareit = nareit$ticker, sec = sec$ticker, press_release = pr$ticker, prices = prices$ticker)
+purrr::map_dfr(key_sets, ~ tibble(n_tickers = n_distinct(.x),
+                                  bad_format = sum(!stringr::str_detect(.x, "^[A-Z.]+$"))), .id = "table")
+```
 
 ## Join
 
+We build a "skeleton" with one row for every REIT for every finished quarter since
+`START_YEAR`, and then left join each source onto it. That way a missing source shows up as
+`NA` instead of the row quietly disappearing. A REIT's quarters before it started trading
+(Curbline, Q4 2024) are dropped, because there is nothing to report for them.
+
+```{r skeleton}
+quarters = tsy |> distinct(year, quarter)   # finished quarters only (cleaned in 02)
+
+first_trade = prices |>
+  group_by(ticker) |>
+  summarise(first_q = min(year * 10 + quarter), .groups = "drop")
+
+skeleton = tidyr::crossing(ticker = nareit$ticker, quarters) |>
+  inner_join(first_trade, by = "ticker") |>
+  filter(year * 10 + quarter >= first_q) |>
+  select(-first_q)
+nrow(skeleton)
+```
+
+```{r join}
+step0 = skeleton
+step1 = step0 |> left_join(sec, by = c("ticker", "year", "quarter"))
+step2 = step1 |> left_join(pr |> select(-file), by = c("ticker", "year", "quarter"))
+step3 = step2 |> left_join(prices, by = c("ticker", "year", "quarter"))
+step4 = step3 |> left_join(tsy, by = c("year", "quarter"))
+step5 = step4 |> left_join(focus, by = "ticker")
+step6 = step5 |> left_join(nareit, by = "ticker")
+
+reit_quarterly = step6 |>
+  mutate(
+    quarter_label = paste0(year, " Q", quarter),
+    quarter_end   = lubridate::ceiling_date(as.Date(paste(year, quarter * 3, 1, sep = "-")), "month") - 1,
+    # FFO is quarterly, so x4 to get a yearly number; price / FFO is the REIT version of P/E
+    price_to_ffo  = if_else(!is.na(ffo_per_share) & ffo_per_share > 0,
+                            close_price / (ffo_per_share * 4), NA_real_)
+  ) |>
+  relocate(ticker, company, property_group, property_type, year, quarter, quarter_label, quarter_end) |>
+  arrange(ticker, year, quarter)
+```
+
 ## Check the join
 
-Rows before and after each join, and the rows that did not match.
+Every join is a left join onto the skeleton, so the row count should never change. If it
+goes up, one of the sources has duplicate keys.
+
+```{r join-counts}
+tibble(step = c("skeleton", "+ SEC", "+ press release", "+ prices", "+ treasury", "+ property type", "+ Nareit"),
+       rows = c(nrow(step0), nrow(step1), nrow(step2), nrow(step3), nrow(step4), nrow(step5), nrow(step6)))
+```
+
+Rows in the skeleton that found no match in each source:
+
+```{r unmatched}
+tibble(
+  source = c("SEC facts (revenue)", "Press release (LLM)", "Stock prices", "Treasury", "Property type"),
+  unmatched_rows = c(sum(is.na(reit_quarterly$revenue_mm)),
+                     sum(is.na(reit_quarterly$filing_date)),
+                     sum(is.na(reit_quarterly$close_price)),
+                     sum(is.na(reit_quarterly$treasury_10y_avg)),
+                     sum(is.na(reit_quarterly$property_group)))
+)
+
+# which REIT-quarters are missing a press release?
+reit_quarterly |> filter(is.na(filing_date)) |> select(ticker, quarter_label)
+
+# rows in the sources that did NOT make it into the skeleton (e.g. a quarter before START_YEAR)
+anti_join(sec, skeleton, by = c("ticker", "year", "quarter")) |> count(ticker, name = "sec_rows_dropped")
+anti_join(pr,  skeleton, by = c("ticker", "year", "quarter")) |> count(ticker, name = "pr_rows_dropped")
+```
 
 ## Save the final dataset
 
-Write to `../data/processed/`.
+Two files for Tableau:
+
+- `retail_reit_quarterly.csv` - **one row = one retail REIT in one quarter** (the main dataset)
+- `retail_reit_profiles.csv` - **one row = one retail REIT** (Nareit info plus its latest quarter), for the map and the summary tables
+
+```{r save}
+readr::write_csv(reit_quarterly, file.path(proc_dir, "retail_reit_quarterly.csv"))
+
+reit_profiles = reit_quarterly |>
+  filter(!is.na(revenue_mm) | !is.na(occupancy_pct)) |>
+  group_by(ticker) |>
+  slice_max(year * 10 + quarter, n = 1) |>
+  ungroup() |>
+  select(ticker, company, property_group, property_type, hq_city, hq_state, hq_zip, exchange,
+         latest_quarter = quarter_label, occupancy_pct, same_property_noi_growth_pct,
+         total_assets_mm, liabilities_to_assets, price_to_ffo,
+         dividend_yield_pct, return_1yr_pct, return_3yr_cagr_pct, return_5yr_cagr_pct)
+readr::write_csv(reit_profiles, file.path(proc_dir, "retail_reit_profiles.csv"))
+
+dim(reit_quarterly)
+dim(reit_profiles)
+```

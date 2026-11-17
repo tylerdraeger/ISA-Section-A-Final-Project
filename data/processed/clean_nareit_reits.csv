@@ -1,0 +1,25 @@
+ticker,company,hq_city,hq_state,nareit_sector,price_on_nareit,nareit_as_of,exchange,hq_zip,return_1yr_pct,return_3yr_cagr_pct,return_5yr_cagr_pct,return_10yr_cagr_pct,dividend_yield_pct,trailing_dividend_ps
+CBL,CBL Properties,Chattanooga,Tennessee,Retail,54.61,2026-11-13,NYSE,37421,NA,NA,NA,NA,4.58,1.7
+MAC,Macerich,Santa Monica,California,Retail,25.07,2026-11-13,NYSE,90401,NA,NA,NA,NA,2.71,0.6799999999999999
+SPG,"Simon Property Group, Inc.",Indianapolis,Indiana,Retail,232.97,2026-11-13,NYSE,46204,NA,NA,NA,NA,3.86,8.55
+KIM,Kimco Realty Corporation,Jericho,New York,Retail,25.55,2026-11-13,NYSE,11753,NA,NA,NA,NA,4.38,1.01
+CURB,Curbline Properties,New York,New York,Retail,29.150000000000002,2026-11-13,NYSE,10022,NA,NA,NA,NA,2.3299999999999996,0.6699999999999999
+CTO,"CTO Realty Growth, Inc.",Winter Park,Florida,Retail,20.32,2026-11-13,NYSE,32789,NA,NA,NA,NA,7.48,1.52
+PECO,Phillips Edison & Co.,Cincinnati,Ohio,Retail,41.190000000000005,2026-11-13,NASDAQ,11501,NA,NA,NA,NA,3.3499999999999996,1.25
+SKT,Tanger Inc.,Greensboro,North Carolina,Retail,39.5,2026-11-13,NYSE,27408,NA,NA,NA,NA,3.16,1.1500000000000001
+FRT,Federal Realty Investment Trust,North Bethesda,Maryland,Retail,112.92,2026-11-13,NYSE,20852,NA,NA,NA,NA,4.109999999999999,4.46
+BRX,Brixmor Property Group Inc.,New York,New York,Retail,30.3,2026-11-13,NYSE,10017,NA,NA,NA,NA,4.06,1.1700000000000002
+KRG,Kite Realty Group Trust,Indianapolis,Indiana,Retail,25.55,2026-11-13,NYSE,46204,NA,NA,NA,NA,4.54,1.11
+IVT,InvenTrust Properties Corp.,Downers Grove,Illinois,Retail,31.54,2026-11-13,NYSE,60515,NA,NA,NA,NA,3.17,0.9500000000000001
+UE,Urban Edge Properties,New York,New York,Retail,20.86,2026-11-13,NYSE,10017,NA,NA,NA,NA,4.03,0.76
+REG,Regency Centers Corporation,Jacksonville,Florida,Retail,76.11,2026-11-13,NASDAQ,32202,NA,NA,NA,NA,3.9699999999999998,2.8699999999999997
+O,Realty Income Corporation,San Diego,California,Retail,58.82,2026-11-13,NYSE,11995,NA,NA,NA,NA,5.54,3.22
+GTY,Getty Realty Corp.,New York,New York,Retail,28.66,2026-11-13,NYSE,10017,NA,NA,NA,NA,6.7700000000000005,1.9
+PINE,Alpine Income Property Trust,Winter Park,Florida,Retail,16.8,2026-11-13,NYSE,32789,NA,NA,NA,NA,7.619999999999999,1.1400000000000001
+NTST,NETSTREIT,Dallas,Texas,Retail,18.51,2026-11-13,NYSE,75201,NA,NA,NA,NA,4.859999999999999,0.8500000000000001
+NNN,"NNN REIT, Inc.",Orlando,Florida,Retail,41.18,2026-11-13,NYSE,32801,NA,NA,NA,NA,6.02,2.36
+AKR,Acadia Realty Trust,Rye,New York,Retail,20.21,2026-11-13,NYSE,10580,NA,NA,NA,NA,3.96,0.8
+FCPT,Four Corners Property Trust,Mill Valley,California,Retail,23.32,2026-11-13,NYSE,94941,NA,NA,NA,NA,4.34,1.43
+BFS,"Saul Centers, Inc.",Bethesda,Maryland,Retail,28.37,2026-11-13,NYSE,20814,NA,NA,NA,NA,8.32,NA
+ADC,Agree Realty Corporation,Royal Oak,Michigan,Retail,69.36999999999999,2026-11-13,NYSE,32301,NA,NA,NA,NA,4.6899999999999995,3.08
+EPRT,"Essential Properties Realty Trust, Inc.",Princeton,New Jersey,Retail,27.779999999999998,2026-11-13,NYSE,08540,NA,NA,NA,NA,4.609999999999999,1.21

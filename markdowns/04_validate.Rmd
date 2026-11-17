@@ -7,15 +7,213 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.width = 9, fig.height = 5)
+```
+
+```{r settings}
+proc_dir = "../data/processed"
+raw_dir  = "../data/raw"
+library(dplyr)
+library(ggplot2)
+
+df = readr::read_csv(file.path(proc_dir, "retail_reit_quarterly.csv"), show_col_types = FALSE)
+pr = readr::read_csv(file.path(proc_dir, "clean_press_release_metrics.csv"), show_col_types = FALSE)
+sec_tickers = readr::read_csv(file.path(raw_dir, "sec_company_tickers.csv"), show_col_types = FALSE)
+nareit = readr::read_csv(file.path(proc_dir, "clean_nareit_reits.csv"), show_col_types = FALSE)
 ```
 
 ## Validation rules
 
+What one row of the final dataset should look like, written as rules:
+
+| # | Rule | Why |
+|---|---|---|
+| 1 | `ticker` + `year` + `quarter` is unique | one row per REIT per quarter |
+| 2 | every Nareit ticker is found in the SEC ticker file | otherwise we have no financials for it |
+| 3 | every REIT-quarter has SEC revenue | failed join or a tag we did not pull |
+| 4 | every REIT-quarter has a press release | missing 8-K or no Exhibit 99.1 |
+| 5 | the quarter the LLM read matches the quarter from the filing date | catches a wrong release or a misread |
+| 6 | occupancy is between 80 and 100 | retail REITs do not run below ~80%; above 100 is impossible |
+| 7 | same-property NOI growth is between -15 and +15 percent | anything outside that is almost surely a misread (e.g. year-to-date or a typo) |
+| 8 | FFO per share is between $0 and $5 for a quarter | a negative or huge FFO usually means the wrong line was read (Simon's is really about $3.20, so the cap is $5) |
+| 9 | revenue is positive | a derived Q4 (full year minus Q1-Q3) can go negative if a tag changed mid-year |
+| 10 | liabilities are less than assets | negative equity is possible but worth a look |
+| 11 | quarterly stock return is between -40% and +40% | bigger moves are rare; check for a split or bad price |
+| 12 | `property_type` is one of the allowed categories | invalid category |
+| 13 | each LLM number actually appears in the press release text | the model should copy numbers, not invent them |
+
 ## Validation table
 
-The rows that break each rule.
+The rows that break each rule. An empty result for a rule means every row passed.
+
+```{r rules}
+flag = function(data, rule, column, value) {
+  data |>
+    transmute(rule = rule, ticker,
+              quarter = if ("quarter_label" %in% names(data)) quarter_label else NA_character_,
+              column = column, value = as.character({{ value }}))
+}
+
+v = list()
+
+v[[1]] = df |> count(ticker, year, quarter, quarter_label) |> filter(n > 1) |>
+  flag("1 duplicate key", "ticker/year/quarter", n)
+
+v[[2]] = nareit |> filter(!ticker %in% sec_tickers$ticker) |>
+  flag("2 ticker not at SEC", "ticker", ticker)
+
+v[[3]] = df |> filter(is.na(revenue_mm)) |> flag("3 missing SEC revenue", "revenue_mm", revenue_mm)
+
+v[[4]] = df |> filter(is.na(filing_date)) |> flag("4 missing press release", "filing_date", filing_date)
+
+v[[5]] = df |> filter(!is.na(llm_period_matches), !llm_period_matches) |>
+  flag("5 LLM quarter differs from filing-date quarter", "llm_period",
+       paste0(llm_period_year, " Q", llm_period_quarter))
+
+v[[6]] = df |> filter(!is.na(occupancy_pct), occupancy_pct < 80 | occupancy_pct > 100) |>
+  flag("6 occupancy out of range", "occupancy_pct", occupancy_pct)
+
+v[[7]] = df |> filter(!is.na(same_property_noi_growth_pct), abs(same_property_noi_growth_pct) > 15) |>
+  flag("7 SP NOI growth out of range", "same_property_noi_growth_pct", same_property_noi_growth_pct)
+
+v[[8]] = df |> filter(!is.na(ffo_per_share), ffo_per_share <= 0 | ffo_per_share > 5) |>
+  flag("8 FFO per share out of range", "ffo_per_share", ffo_per_share)
+
+v[[9]] = df |> filter(!is.na(revenue_mm), revenue_mm <= 0) |>
+  flag("9 revenue not positive", "revenue_mm", revenue_mm)
+
+v[[10]] = df |> filter(!is.na(liabilities_to_assets), liabilities_to_assets >= 1) |>
+  flag("10 liabilities >= assets", "liabilities_to_assets", round(liabilities_to_assets, 3))
+
+v[[11]] = df |> filter(!is.na(total_return_q_pct), abs(total_return_q_pct) > 40) |>
+  flag("11 quarterly return out of range", "total_return_q_pct", round(total_return_q_pct, 1))
+
+allowed = c("grocery_anchored_center", "open_air_center", "mall_outlet", "net_lease", "mixed")
+v[[12]] = df |> filter(!is.na(property_type), !property_type %in% allowed) |>
+  flag("12 invalid property type", "property_type", property_type)
+```
+
+Rule 13 is the check on the LLM. For each number the model returned, we look for that
+number written in the press release text (as `96.6`, `96.60`, or `$0.47`). If we cannot find
+it, the model may have calculated or made it up, and the row goes in the table to check by hand.
+
+```{r rule-13}
+num_in_text = function(x, txt) {
+  if (is.na(x)) return(NA)
+  forms = unique(c(format(x, nsmall = 1, trim = TRUE), format(x, nsmall = 2, trim = TRUE),
+                   as.character(x), as.character(abs(x))))
+  any(stringr::str_detect(txt, stringr::fixed(forms)))
+}
+
+grounding = pr |>
+  filter(file.exists(file)) |>
+  rowwise() |>
+  mutate(
+    txt = paste(readLines(file, warn = FALSE), collapse = " "),
+    occupancy_found = num_in_text(occupancy_pct, txt),
+    sp_noi_found    = num_in_text(same_property_noi_growth_pct, txt),
+    ffo_found       = num_in_text(ffo_per_share, txt)
+  ) |>
+  ungroup() |>
+  select(-txt) |>
+  mutate(quarter_label = paste0(year, " Q", quarter))
+
+v[[13]] = bind_rows(
+  grounding |> filter(occupancy_found == FALSE) |> flag("13 LLM value not in text", "occupancy_pct", occupancy_pct),
+  grounding |> filter(sp_noi_found == FALSE)    |> flag("13 LLM value not in text", "same_property_noi_growth_pct", same_property_noi_growth_pct),
+  grounding |> filter(ffo_found == FALSE)       |> flag("13 LLM value not in text", "ffo_per_share", ffo_per_share)
+)
+
+validation_table = bind_rows(v) |> arrange(rule, ticker, quarter)
+readr::write_csv(validation_table, file.path(proc_dir, "validation_table.csv"))
+
+validation_table |> count(rule, name = "rows_flagged")
+knitr::kable(validation_table)
+```
+
+How often the LLM numbers could be found word-for-word in the source text:
+
+```{r grounding-rate}
+grounding |>
+  summarise(across(c(occupancy_found, sp_noi_found, ffo_found), ~ mean(.x, na.rm = TRUE))) |>
+  tidyr::pivot_longer(everything(), names_to = "field", values_to = "share_found_in_text")
+```
 
 ## Descriptive summaries
 
-Summary statistics, data quality checks, and exploratory charts.
+### Size and shape of the final dataset
+
+```{r shape}
+dim(df)
+df |> summarise(reits = n_distinct(ticker), quarters = n_distinct(quarter_label),
+                first = min(quarter_label), last = max(quarter_label))
+df |> distinct(ticker, company, property_group) |> count(property_group)
+```
+
+### Missing values by column
+
+```{r missing}
+df |>
+  summarise(across(everything(), ~ mean(is.na(.x)))) |>
+  tidyr::pivot_longer(everything(), names_to = "column", values_to = "share_missing") |>
+  filter(share_missing > 0) |>
+  arrange(desc(share_missing)) |>
+  knitr::kable(digits = 2)
+```
+
+`same_property_noi_growth_pct` and `rent_spread_pct` are missing for most net-lease REITs on
+purpose: those companies do not report same-property NOI or leasing spreads (they report
+rent recapture or AFFO instead). That is a real difference between business models, not a data error.
+
+### Summary statistics by property group
+
+```{r summary-stats}
+df |>
+  group_by(property_group) |>
+  summarise(
+    reits             = n_distinct(ticker),
+    avg_occupancy     = mean(occupancy_pct, na.rm = TRUE),
+    avg_sp_noi_growth = mean(same_property_noi_growth_pct, na.rm = TRUE),
+    avg_price_to_ffo  = mean(price_to_ffo, na.rm = TRUE),
+    avg_q_return      = mean(total_return_q_pct, na.rm = TRUE),
+    avg_liab_to_assets = mean(liabilities_to_assets, na.rm = TRUE)
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+### Exploratory charts
+
+```{r chart-occupancy}
+df |>
+  filter(!is.na(occupancy_pct)) |>
+  group_by(property_group, quarter_end) |>
+  summarise(occupancy = mean(occupancy_pct), .groups = "drop") |>
+  ggplot(aes(quarter_end, occupancy, color = property_group)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Average occupancy by property group", x = NULL, y = "Occupancy (%)", color = NULL) +
+  theme_minimal()
+```
+
+```{r chart-rates}
+df |>
+  filter(!is.na(total_return_q_pct)) |>
+  ggplot(aes(treasury_10y_change_bp, total_return_q_pct, color = property_group)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Quarterly REIT return vs. change in the 10-year Treasury yield",
+       x = "Change in 10-year yield over the quarter (basis points)",
+       y = "Quarterly total return (%)", color = NULL) +
+  theme_minimal()
+```
+
+```{r chart-valuation}
+df |>
+  filter(!is.na(price_to_ffo), !is.na(same_property_noi_growth_pct)) |>
+  group_by(ticker, property_group) |>
+  summarise(price_to_ffo = mean(price_to_ffo), sp_noi = mean(same_property_noi_growth_pct), .groups = "drop") |>
+  ggplot(aes(sp_noi, price_to_ffo, label = ticker, color = property_group)) +
+  geom_text() +
+  labs(title = "Do faster-growing REITs get higher valuations?",
+       x = "Average same-property NOI growth (%)", y = "Average price / annualized FFO", color = NULL) +
+  theme_minimal()
+```
